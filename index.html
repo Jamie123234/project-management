@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <!-- THIS IS CRITICAL for mobile responsiveness -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Project Management Study Hub</title>
     <!-- Tailwind CSS CDN -->
@@ -10,14 +11,22 @@
     <script src="https://unpkg.com/lucide-dev@0.395.0"></script>
     <!-- Tailwind Typography for 'prose' styling -->
     <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
-    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
     
     <style>
         /* Custom font */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
         
+        html, body {
+            height: 100%; /* Ensure html and body take full height */
+            overflow: hidden; /* Prevent bouncing on mobile */
+        }
+
         body {
             font-family: 'Inter', sans-serif;
+        }
+        
+        body.mobile-menu-open {
+             overflow: hidden; /* Prevent body scroll when mobile menu is open */
         }
 
         /* Animation for content switching */
@@ -58,6 +67,7 @@
         /* Custom scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
+            height: 8px;
         }
         ::-webkit-scrollbar-track {
             background: #f1f5f9; /* slate-100 */
@@ -151,18 +161,36 @@
 </head>
 <body class="bg-slate-100 font-sans antialiased">
 
-    <div class="flex h-screen">
+    <!-- Mobile Menu Backdrop -->
+    <div id="mobile-menu-backdrop" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden"></div>
+    
+    <!-- 
+      ROOT LAYOUT CONTAINER 
+      - flex: Makes sidebar and main content sit side-by-side
+      - h-screen: Takes full viewport height
+    -->
+    <div class="flex h-screen bg-slate-100">
         <!-- Sidebar Navigation -->
-        <nav class="w-72 bg-white shadow-xl h-full flex flex-col flex-shrink-0">
+        <!-- 
+          Mobile: fixed, full-height, hidden by default (-translate-x-full)
+          Desktop: relative, full-height, always visible (md:relative md:translate-x-0)
+        -->
+        <nav id="sidebar" class="w-72 bg-white shadow-xl h-full flex flex-col flex-shrink-0
+                         fixed inset-y-0 left-0 z-50
+                         transform -translate-x-full md:relative md:translate-x-0
+                         transition-transform duration-300 ease-in-out">
             <!-- Sidebar Header -->
-            <div class="p-6 border-b border-white/20 bg-gradient-to-br from-blue-700 to-blue-600">
+            <div class="p-6 border-b border-white/20 bg-gradient-to-br from-blue-700 to-blue-600 flex justify-between items-center">
                 <h1 class="text-2xl font-bold text-white flex items-center">
                     <i data-lucide="book-open-check" class="mr-2.5"></i>
                     PM Study Hub
                 </h1>
-                <p class="text-sm text-blue-100 opacity-90">Your Exam Prep Center</p>
+                <!-- Mobile Close Button -->
+                <button id="menu-close-btn" class="md:hidden text-blue-200 hover:text-white">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
             </div>
-            <!-- Navigation Links -->
+            <!-- Navigation Links (Scrollable) -->
             <div class="overflow-y-auto flex-grow p-4 space-y-1">
                 <ul id="sidebar-nav">
                     <!-- Navigation links will be populated by JS -->
@@ -173,20 +201,41 @@
             </div>
         </nav>
 
-        <!-- Main Content Area -->
-        <main class="flex-1 flex flex-col h-screen">
+        <!-- 
+          MAIN CONTENT AREA
+          - flex-1: Takes up remaining horizontal space
+          - flex, flex-col: Stacks header and content vertically
+          - overflow-hidden: CRITICAL! Prevents this column from scrolling, 
+                             forcing the 'content-container' child to handle scrolling.
+        -->
+        <main class="flex-1 flex flex-col overflow-hidden">
             <!-- Header -->
-            <header class="bg-white border-b border-slate-200 p-4 flex justify-between items-center z-10 shadow-sm">
-                <h2 id="main-topic-title" class="text-3xl font-bold text-slate-800">
-                    <!-- Topic title will be populated by JS -->
-                </h2>
-                <div id="mode-switcher" class="flex space-x-2 rounded-lg bg-slate-200 p-1">
+            <header class="bg-white border-b border-slate-200 p-4 flex flex-col md:flex-row md:justify-between md:items-center z-10 shadow-sm gap-4">
+                <div class="flex justify-between items-center w-full">
+                    <!-- Mobile Menu Button -->
+                    <button id="menu-open-btn" class="md:hidden text-slate-600 hover:text-slate-900">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                    
+                    <h2 id="main-topic-title" class="text-xl md:text-3xl font-bold text-slate-800 text-center md:text-left truncate flex-1 mx-2 md:mx-0">
+                        <!-- Topic title will be populated by JS -->
+                    </h2>
+                    
+                    <!-- Spacer for mobile to balance hamburger icon -->
+                    <div class="md:hidden w-6"></div>
+                </div>
+
+                <div id="mode-switcher" class="flex space-x-2 rounded-lg bg-slate-200 p-1 w-full md:w-auto overflow-x-auto">
                     <!-- Mode buttons will be populated by JS -->
                 </div>
             </header>
 
-            <!-- Content Container -->
-            <div id="content-container" class="flex-1 p-6 lg:p-10 overflow-y-auto bg-slate-50">
+            <!-- 
+              SCROLLABLE Content Container 
+              - flex-1: Takes up remaining vertical space
+              - overflow-y-auto: CRITICAL! This is the element that scrolls.
+            -->
+            <div id="content-container" class="flex-1 p-4 md:p-6 lg:p-10 overflow-y-auto bg-slate-50">
                 <!-- Notes Container -->
                 <div id="notes-panel" class="content-panel prose prose-slate max-w-none prose-h2:font-semibold prose-h2:text-slate-700 prose-h2:border-b prose-h2:pb-2 prose-h3:font-medium prose-h3:text-blue-600 prose-strong:text-slate-700 prose-ul:list-disc prose-ul:ml-5 prose-li:my-1 prose-table:border prose-th:border prose-th:p-2 prose-td:border prose-td:p-2 prose-a:text-blue-600 hover:prose-a:text-blue-700">
                     <!-- Notes content will be populated by JS -->
@@ -201,13 +250,13 @@
 
                 <!-- Quiz Container -->
                 <div id="quiz-panel" class="content-panel hidden max-w-3xl mx-auto">
-                    <div id="quiz-content" class="bg-white p-8 rounded-xl shadow-xl space-y-8">
+                    <div id="quiz-content" class="bg-white p-6 md:p-8 rounded-xl shadow-xl space-y-8">
                         <!-- Quiz questions will be populated by JS -->
                     </div>
                     <button id="quiz-submit-btn" class="mt-8 w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-blue-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transform hover:-translate-y-0.5 active:translate-y-0">
                         Check My Answers
                     </button>
-                    <div id="quiz-results" class="hidden mt-8 text-3xl font-bold text-center text-slate-700 bg-white p-8 rounded-xl shadow-xl"></div>
+                    <div id="quiz-results" class="hidden mt-8 text-2xl md:text-3xl font-bold text-center text-slate-700 bg-white p-6 md:p-8 rounded-xl shadow-xl"></div>
                 </div>
             </div>
         </main>
@@ -698,7 +747,7 @@
                     { term: "Product Owner (Scrum)", definition: "The role responsible for representing stakeholders and defining/prioritizing the Product Backlog." },
                     { term: "Scrum Master (Scrum)", definition: "The role responsible for facilitating the Scrum process, removing impediments, and coaching the team." },
                     { term: "Sprint (Scrum)", definition: "A time-boxed period (typically 1-4 weeks) during which the team works to create a usable Increment." },
-                    { term: "Kanban", definition: "An agile method focused on visualizing workflow, limiting Work inA: Progress (WIP), and managing flow." },
+                    { term: "Kanban", definition: "An agile method focused on visualizing workflow, limiting Work in Progress (WIP), and managing flow." },
                     { term: "Limit Work in Progress (WIP)", definition: "A core principle of Kanban; sets a maximum number of items allowed in a workflow stage to prevent bottlenecks." },
                     { term: "Scrum vs. Kanban", definition: "Scrum uses time-boxed Sprints and defined roles; Kanban is flow-based and focuses on WIP limits." }
                 ],
@@ -801,6 +850,7 @@
         let currentMode = 'notes'; // 'notes', 'flashcards', 'quiz'
 
         // --- DOM ELEMENTS ---
+        const sidebar = document.getElementById('sidebar');
         const sidebarNav = document.getElementById('sidebar-nav');
         const mainTopicTitle = document.getElementById('main-topic-title');
         const modeSwitcher = document.getElementById('mode-switcher');
@@ -809,13 +859,16 @@
         const flashcardPanel = document.getElementById('flashcard-panel');
         const quizPanel = document.getElementById('quiz-panel');
 
-        const notesContainer = document.getElementById('notes-panel'); // Kept for compatibility
         const flashcardGrid = document.getElementById('flashcard-grid');
-        const quizContainer = document.getElementById('quiz-panel'); // Kept for compatibility
         
         const quizContent = document.getElementById('quiz-content');
         const quizSubmitBtn = document.getElementById('quiz-submit-btn');
         const quizResults = document.getElementById('quiz-results');
+
+        // Mobile Menu Elements
+        const menuOpenBtn = document.getElementById('menu-open-btn');
+        const menuCloseBtn = document.getElementById('menu-close-btn');
+        const mobileMenuBackdrop = document.getElementById('mobile-menu-backdrop');
 
         // --- RENDER FUNCTIONS ---
 
@@ -849,6 +902,7 @@
                         currentMode = 'notes'; // Default to notes when switching topics
                         renderAll();
                     }
+                    closeMobileMenu(); // Close menu on navigation
                 });
             });
         }
@@ -864,14 +918,17 @@
             };
 
             modeSwitcher.innerHTML = `
-                <button data-mode="notes" class="px-4 py-1.5 rounded-md font-medium text-sm transition-all ${getButtonClass('notes')}">
-                    <i data-lucide="file-text" class="w-4 h-4 inline-block mr-1 -mt-0.5"></i> Notes
+                <button data-mode="notes" class="px-3 py-1.5 rounded-md font-medium text-sm transition-all flex-shrink-0">
+                    <i data-lucide="file-text" class="w-4 h-4 inline-block mr-0.5 -mt-0.5 sm:mr-1"></i>
+                    <span class="hidden sm:inline">Notes</span>
                 </button>
-                <button data-mode="flashcards" class="px-4 py-1.5 rounded-md font-medium text-sm transition-all ${getButtonClass('flashcards')}">
-                    <i data-lucide="layers" class="w-4 h-4 inline-block mr-1 -mt-0.5"></i> Flashcards
+                <button data-mode="flashcards" class="px-3 py-1.5 rounded-md font-medium text-sm transition-all flex-shrink-0">
+                    <i data-lucide="layers" class="w-4 h-4 inline-block mr-0.5 -mt-0.5 sm:mr-1"></i>
+                    <span class="hidden sm:inline">Flashcards</span>
                 </button>
-                <button data-mode="quiz" class="px-4 py-1.5 rounded-md font-medium text-sm transition-all ${getButtonClass('quiz')}">
-                    <i data-lucide="help-circle" class="w-4 h-4 inline-block mr-1 -mt-0.5"></i> Quiz
+                <button data-mode="quiz" class="px-3 py-1.5 rounded-md font-medium text-sm transition-all flex-shrink-0">
+                    <i data-lucide="help-circle" class="w-4 h-4 inline-block mr-0.5 -mt-0.5 sm:mr-1"></i>
+                    <span class="hidden sm:inline">Quiz</span>
                 </button>
             `;
             // Add click listeners
@@ -937,7 +994,7 @@
                     <div class="quiz-option">
                         <input type="radio" name="question_${index}" id="q${index}_o${i}" value="${option}">
                         <label for="q${index}_o${i}">
-                            <span classg="text-slate-700">${option}</span>
+                            <span classm="text-slate-700">${option}</span>
                         </label>
                     </div>
                 `).join('');
@@ -948,7 +1005,6 @@
                         <div class="space-y-3">
                             ${optionsHtml}
                         </div>
-                        <div class="mt-4 text-sm font-medium result-feedback"></div>
                     </div>
                 `;
             });
@@ -969,7 +1025,6 @@
             questionBlocks.forEach((block, index) => {
                 const q = topic.quiz[index];
                 const selectedInput = block.querySelector(`input[name="question_${index}"]:checked`);
-                const feedbackEl = block.querySelector('.result-feedback');
                 
                 // Disable all inputs for this question
                 block.querySelectorAll('input[type="radio"]').forEach(input => {
@@ -999,7 +1054,7 @@
             });
 
             // Display final score
-            const score = (correctAnswers / topic.quiz.length) * 100;
+            const score = (correctAnswers / Youtopic.quiz.length) * 100;
             quizResults.innerHTML = `You scored ${correctAnswers} out of ${topic.quiz.length} (${score.toFixed(0)}%)`;
             quizResults.style.display = 'block';
             quizSubmitBtn.style.display = 'none'; // Hide submit button after checking
@@ -1054,11 +1109,29 @@
                 lucide.createIcons();
             }
         }
+        
+        // --- MOBILE MENU LOGIC ---
+        function openMobileMenu() {
+            sidebar.classList.remove('-translate-x-full');
+            mobileMenuBackdrop.classList.remove('hidden');
+            document.body.classList.add('mobile-menu-open');
+        }
+
+        function closeMobileMenu() {
+            sidebar.classList.add('-translate-x-full');
+            mobileMenuBackdrop.classList.add('hidden');
+            document.body.classList.remove('mobile-menu-open');
+        }
 
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
             renderAll();
             quizSubmitBtn.addEventListener('click', checkQuiz);
+
+            // Mobile menu event listeners
+            menuOpenBtn.addEventListener('click', openMobileMenu);
+            menuCloseBtn.addEventListener('click', closeMobileMenu);
+            mobileMenuBackdrop.addEventListener('click', closeMobileMenu);
         });
     </script>
 </body>
