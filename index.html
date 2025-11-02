@@ -1,1 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Management Study Hub</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide-dev@0.395.0"></script>
+    <!-- Tailwind Typography for 'prose' styling -->
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    
+    <style>
+        /* Custom styles for flashcard flipping */
+        .flashcard {
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+        .flashcard.is-flipped {
+            transform: rotateY(180deg);
+        }
+        .flashcard-face {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .flashcard-back {
+            transform: rotateY(180deg);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9; /* gray-100 */
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8; /* gray-400 */
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b; /* gray-500 */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <div class="flex h-screen">
+        <!-- Sidebar Navigation -->
+        <nav class="w-72 bg-white shadow-lg h-full flex flex-col flex-shrink-0">
+            <div class="p-6 border-b">
+                <h1 class="text-2xl font-bold text-blue-700 flex items-center">
+                    <i data-lucide="book-open-check" class="mr-2"></i>
+                    PM Study Hub
+                </h1>
+                <p class="text-sm text-gray-500">Your Exam Prep Center</p>
+            </div>
+            <div class="overflow-y-auto flex-grow p-4 space-y-2">
+                <ul id="sidebar-nav">
+                    <!-- Navigation links will be populated by JS -->
+                </ul>
+            </div>
+            <div class="p-4 border-t text-xs text-gray-400">
+                Created to help you ace your exam.
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 flex flex-col h-screen">
+            <!-- Header -->
+            <header class="bg-white border-b border-gray-200 p-4 flex justify-between items-center">
+                <h2 id="main-topic-title" class="text-3xl font-bold text-gray-800">
+                    <!-- Topic title will be populated by JS -->
+                </h2>
+                <div id="mode-switcher" class="flex space-x-2 rounded-lg bg-gray-200 p-1">
+                    <!-- Mode buttons will be populated by JS -->
+                </div>
+            </header>
+
+            <!-- Content Container -->
+            <div id="content-container" class="flex-1 p-6 lg:p-10 overflow-y-auto bg-gray-50">
+                <!-- Notes Container -->
+                <div id="notes-container" class="prose prose-blue max-w-none prose-h2:font-semibold prose-h2:text-gray-700 prose-h2:border-b prose-h2:pb-2 prose-h3:font-medium prose-h3:text-blue-600 prose-strong:text-gray-700 prose-ul:list-disc prose-ul:ml-5 prose-li:my-1 prose-table:border prose-th:border prose-th:p-2 prose-td:border prose-td:p-2">
+                    <!-- Notes content will be populated by JS -->
+                </div>
+
+                <!-- Flashcard Container -->
+                <div id="flashcard-container" class="hidden">
+                    <div id="flashcard-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Flashcards will be populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Quiz Container -->
+                <div id="quiz-container" class="hidden max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-lg">
+                    <div id="quiz-content" class="space-y-8">
+                        <!-- Quiz questions will be populated by JS -->
+                    </div>
+                    <button id="quiz-submit-btn" class="mt-8 w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                        Check My Answers
+                    </button>
+                    <div id="quiz-results" class="hidden mt-6 text-2xl font-bold text-center"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // --- DATA SOURCE ---
+        // All study guide content, flashcards, and quizzes are defined here.
+        // UPDATED based on past paper analysis.
+        const studyData = [
+            {
+                id: 'q0',
+                title: "Project Initiation & Selection",
+                icon: 'rocket',
+                notes: `
+                    <h2>Project Initiation & Planning</h2>
+                    <p>The <strong>Planning Phase</strong> is arguably the most critical phase. It follows the Initiation Phase (where the project is authorized) and sets the roadmap for the entire project. Failure to plan is planning to fail.</p>
+                    
+                    <h3>Key Steps in the Planning Phase</h3>
+                    <p>While steps can vary, three fundamental activities are:</p>
+                    <ol>
+                        <li><strong>Define Scope & Create WBS:</strong> Clearly determining what the project will deliver (and what it won't). This is broken down into manageable tasks using a Work Breakdown Structure (WBS).</li>
+                        <li><strong>Develop Schedule:</strong> Identifying all activities, sequencing them, estimating their duration, and creating a project timeline (e.g., using a Gantt chart or network diagram).</li>
+                        <li><strong>Create Budget & Resource Plan:</strong> Estimating the cost of all activities and resources (people, equipment) to create a cost baseline. This also involves identifying who is needed to do the work.</li>
+                    </ol>
+
+                    <h2>Project Selection Criteria</h2>
+                    <p><strong>Importance:</strong> Before a project is even initiated, an organization must decide *which* projects to pursue. A set criterion is vital to ensure that resources are allocated to projects that provide the most value and align with the company's strategic goals. It removes emotion and bias from the decision.</p>
+                    
+                    <h3>Potential Selection Criteria</h3>
+                    <ul>
+                        <li><strong>Strategic Alignment:</strong> Does this project directly support the company's long-term goals (e.g., "enter a new market," "be a leader in healthcare tech")?</li>
+                        <li><strong>Financial Value (ROI, NPV):</strong> Does the project have a positive financial outlook?
+                            <ul>
+                                <li><strong>Return on Investment (ROI):</strong> (Benefits - Costs) / Costs. A simple percentage.</li>
+                                <li><strong>Net Present Value (NPV):</strong> Calculates the value of future cash flows in today's money. A positive NPV is good.</li>
+                            </ul>
+                        </li>
+                        <li><strong>Feasibility:</strong> Do we have the technical expertise, resources, and budget to realistically complete this project?</li>
+                    </ul>
+                `,
+                flashcards: [
+                    { term: "Planning Phase", definition: "The project phase focused on defining scope, developing the schedule, and creating the budget." },
+                    { term: "Scope Definition", definition: "A key planning step: clearly determining what the project will and will not deliver." },
+                    { term: "Project Selection Criteria", definition: "A set of standards used to evaluate and choose which projects an organization should undertake." },
+                    { term: "Strategic Alignment", definition: "A selection criterion: how well a project supports the organization's long-term goals." },
+                    { term: "Financial Value (ROI / NPV)", definition: "A selection criterion: evaluating a project's profitability and financial benefits." },
+                    { term: "Work Breakdown Structure (WBS)", definition: "A planning tool that breaks down the total project scope into smaller, manageable tasks." }
+                ],
+                quiz: [
+                    {
+                        question: "Which of these is NOT a primary step in the Planning Phase?",
+                        options: ["Define Scope", "Develop Schedule", "Select the Project Manager", "Create Budget"],
+                        answer: "Select the Project Manager"
+                    },
+                    {
+                        question: "Why is developing a set criterion for project selection important?",
+                        options: ["It guarantees the project will be on time", "It removes bias and aligns projects with company goals", "It's the first step in the Planning Phase", "It helps the team work faster"],
+                        answer: "It removes bias and aligns projects with company goals"
+                    },
+                    {
+                        question: "A project is chosen because it supports the company's goal of expanding into a new market. This is an example of:",
+                        options: ["High ROI", "Strategic Alignment", "Technical Feasibility", "A strong budget"],
+                        answer: "Strategic Alignment"
+                    }
+                ]
+            },
+            {
+                id: 'q2',
+                title: "Risk Management & Analysis",
+                icon: 'shield-alert',
+                notes: `
+                    <h2>Risk Management</h2>
+                    <p><strong>Definition:</strong> The systematic process of identifying, analyzing, planning for responses to, and monitoring risks that could impact a project's objectives.</p>
+                    <p><strong>Purpose:</strong> To minimize the negative impact of threats and maximize the positive impact of opportunities.</p>
+                    
+                    <h3>Key Processes (Risk Management Cycle)</h3>
+                    <ol>
+                        <li><strong>Risk Identification:</strong> Finding potential risks.</li>
+                        <li><strong>Qualitative Risk Analysis:</strong> Assessing probability and impact (prioritizing).</li>
+                        <li><strong>Quantitative Risk Analysis:</strong> Numerically analyzing the effect of risks.</li>
+                        <li><strong>Risk Response Planning:</strong> Developing strategies to deal with risks.</li>
+                        <li><strong>Risk Monitoring & Control:</strong> Tracking risks and evaluating response plans.</li>
+                    </ol>
+
+                    <h2>Risk Identification</h2>
+                    <p><strong>Definition:</strong> The process of finding potential risks that could affect the project's objectives. It's the first and crucial step.</p>
+                    <h3>Techniques for Risk Identification</h3>
+                    <ul>
+                        <li><strong>Brainstorming, Delphi Technique, Checklists, Interviews, SWOT Analysis.</strong></li>
+                        <li><strong>External Risks:</strong> Risks from outside the project/organization (e.g., new government regulation, bad weather, vendor failure).</li>
+                        <li><strong>Human Resource Risks:</strong> Risks related to the team (e.g., key team member gets sick, team lacks required skills, low morale).</li>
+                    </ul>
+                    
+                    <h2>Risk Assessment Matrix</h2>
+                    <p>This is the primary tool for Qualitative Risk Analysis. It plots risks based on their likelihood and impact to determine their priority.</p>
+                    <ul>
+                        <li><strong>Risk:</strong> The potential event (e.g., "Vendor for conference food backs out").</li>
+                        <li><strong>Likelihood (L,M,H):</strong> The probability that this risk will occur (Low, Medium, High).</li>
+                        <li><strong>Impact (L,M,H):</strong> The degree of damage this risk would cause if it occurred (Low, Medium, High).</li>
+                        <li><strong>Action on Trigger:</strong> What specific event will cause the Response Plan to be activated (e.g., "Vendor misses final confirmation deadline").</li>
+                        <li><strong>Response Plan:</strong> The strategy developed in advance to deal with the risk.</li>
+                    </ul>
+
+                    <h3>Common Risk Response Plans (for Threats)</h3>
+                    <ul>
+                        <li><strong>Avoid:</strong> Change the project plan to eliminate the risk (e.g., use a different, more reliable technology).</li>
+                        <li><strong>Mitigate:</strong> Reduce the probability or impact of the risk (e.g., hire a backup vendor just in case).</li>
+                        <li><strong>Transfer:</strong> Shift the impact of the risk to a third party (e.g., buy insurance for the event).</li>
+                        <li><strong>Accept:</strong> Acknowledge the risk and do nothing (used for low-priority risks).</li>
+                    </ul>
+                `,
+                flashcards: [
+                    { term: "Risk Management", definition: "The systematic process of identifying, analyzing, planning responses to, and monitoring project risks." },
+                    { term: "Risk Identification", definition: "The process of finding potential risks (e.g., External, Human Resource) that could affect the project." },
+                    { term: "Risk Assessment Matrix", definition: "A tool used to prioritize risks by plotting their Likelihood and Impact (L/M/H)." },
+                    { term: "Likelihood", definition: "In a risk matrix, the probability (L/M/H) that a risk event will occur." },
+                    { term: "Impact", definition: "In a risk matrix, the degree of damage (L/M/H) a risk would cause." },
+                    { term: "Action on Trigger", definition: "A specific event that activates a risk response plan." },
+                    { term: "Risk Response: Avoid", definition: "A strategy to change the project plan to eliminate a threat completely." },
+                    { term: "Risk Response: Mitigate", definition: "A strategy to reduce the probability or impact of a threat." },
+                    { term: "Risk Response: Transfer", definition: "A strategy to shift the impact of a threat to a third party (e.g., insurance)." },
+                    { term: "Risk Response: Accept", definition: "A strategy to acknowledge a risk and take no action, typically for low-priority risks." }
+                ],
+                quiz: [
+                    {
+                        question: "What is the primary tool used for Qualitative Risk Analysis?",
+                        options: ["SWOT Analysis", "A Risk Assessment Matrix", "The Risk Register", "The Delphi Technique"],
+                        answer: "A Risk Assessment Matrix"
+                    },
+                    {
+                        question: "A new government regulation that could delay your project is an example of what kind of risk?",
+                        options: ["Human Resource Risk", "External Risk", "Internal Risk", "Mitigated Risk"],
+                        answer: "External Risk"
+                    },
+                    {
+                        question: "Buying insurance for a large conference event is what type of risk response?",
+                        options: ["Avoid", "Mitigate", "Transfer", "Accept"],
+                        answer: "Transfer"
+                    },
+                    {
+                        question: "You decide a risk's impact is very low, so you will just deal with it if it happens. This response is:",
+                        options: ["Avoid", "Mitigate", "Transfer", "Accept"],
+                        answer: "Accept"
+                    }
+                ]
+            },
+            {
+                id: 'q4',
+                title: "Critical Path Method (CPM)",
+                icon: 'network',
+                notes: `
+                    <h2>Calculating Earliest Start (ES) and Earliest Finish (EF) Times</h2>
+                    <p>These are fundamental calculations to determine the earliest possible time an activity can begin and end. This is called the <strong>Forward Pass</strong>.</p>
+                    
+                    <h3>Earliest Start (ES)</h3>
+                    <p><strong>Definition:</strong> The earliest possible time an activity can begin.</p>
+                    <p><strong>Calculation:</strong></p>
+                    <ul>
+                        <li>For activities with <strong>no predecessors</strong>, ES = 0.</li>
+                        <li>For activities <strong>with predecessors</strong>, ES = <strong>Max(EF of all predecessors)</strong>.</li>
+                    </ul>
+
+                    <h3>Earliest Finish (EF)</h3>
+                    <p><strong>Definition:</strong> The earliest possible time an activity can be completed.</p>
+                    <p><strong>Calculation: EF = ES + Duration</strong></p>
+
+                    <h2>Total Slack (or Float)</h2>
+                    <p><strong>Definition:</strong> The amount of time an activity can be delayed without delaying the project's overall completion date.</p>
+                    <p><strong>Calculation:</strong> To find slack, you first need the <strong>Latest Start (LS)</strong> and <strong>Latest Finish (LF)</strong> times (found with a <strong>Backward Pass</strong>). Slack = LS - ES or LF - EF.</p>
+                    <ul>
+                        <li><strong>Positive Slack:</strong> The activity is non-critical and can be delayed.</li>
+                        <li><strong>Negative Slack:</strong> The project is behind schedule.</li>
+                        <li><strong>Zero Slack:</strong> The activity is on the Critical Path. Any delay to this activity will delay the entire project.</li>
+                    </ul>
+
+                    <h2>The Critical Path</h2>
+                    <p><strong>Definition:</strong> The sequence of activities with <strong>zero slack</strong> that determines the project's total duration. It is the <strong>longest path</strong> through the network diagram.</p>
+                    <p>Any delay on a critical path activity will delay the entire project completion date.</p>
+
+                    <h3>Example: Finding the Critical Path (from Past Paper)</h3>
+                    <p>Given activities, durations, and dependencies:</p>
+                    <ul>
+                        <li><strong>A (3)</strong></li>
+                        <li><strong>B (10)</strong>, depends on A</li>
+                        <li><strong>C (9)</strong>, depends on A</li>
+                        <li><strong>D (13)</strong>, depends on A</li>
+                        <li><strong>E (1)</strong>, depends on B, C</li>
+                        <li><strong>F (4)</strong>, depends on C</li>
+                        <li><strong>G (2)</strong>, depends on E, F</li>
+                        <li><strong>H (1)</strong>, depends on G</li>
+                    </ul>
+                    
+                    <h4>ES/EF Calculations (Forward Pass):</h4>
+                    <ol>
+                        <li><strong>A:</strong> ES = 0, EF = 0 + 3 = <strong>3</strong></li>
+                        <li><strong>B:</strong> ES = EF(A) = 3, EF = 3 + 10 = <strong>13</strong></li>
+                        <li><strong>C:</strong> ES = EF(A) = 3, EF = 3 + 9 = <strong>12</strong></li>
+                        <li><strong>D:</strong> ES = EF(A) = 3, EF = 3 + 13 = <strong>16</strong></li>
+                        <li><strong>E:</strong> ES = Max(EF(B), EF(C)) = Max(13, 12) = 13, EF = 13 + 1 = <strong>14</strong></li>
+                        <li><strong>F:</strong> ES = EF(C) = 12, EF = 12 + 4 = <strong>16</strong></li>
+                        <li><strong>G:</strong> ES = Max(EF(E), EF(F)) = Max(14, 16) = 16, EF = 16 + 2 = <strong>18</strong></li>
+                        <li><strong>H:</strong> ES = EF(G) = 18, EF = 18 + 1 = <strong>19</strong></li>
+                    </ol>
+                    <p>The project's final activities are D and H. The project is finished when all paths are complete. The longest path takes <strong>19 weeks</strong>.</p>
+                    <p><strong>Critical Path:</strong> The path that leads to the 19-week finish: <strong>A &rarr; C &rarr; F &rarr; G &rarr; H</strong>.</p>
+                    <p><strong>Duration:</strong> 3 + 9 + 4 + 2 + 1 = <strong>19 weeks</strong>.</p>
+                `,
+                flashcards: [
+                    { term: "Earliest Start (ES)", definition: "The earliest an activity can begin. ES = Max(EF of all predecessors)." },
+                    { term: "Earliest Finish (EF)", definition: "The earliest an activity can be completed. EF = ES + Duration." },
+                    { term: "Total Slack (Float)", definition: "The amount of time an activity can be delayed without delaying the entire project's finish date." },
+                    { term: "Zero Slack", definition: "Indicates an activity is on the Critical Path. It has no room for delay." },
+                    { term: "Positive Slack", definition: "Indicates an activity is non-critical and can be delayed without affecting the project's end date." },
+                    { term: "Negative Slack", definition: "Indicates the project is behind schedule." },
+                    { term: "Critical Path", definition: "The sequence of activities with zero slack. It is the longest path in the network and determines the total project duration." },
+                    { term: "Forward Pass", definition: "The process of calculating ES and EF times from the start to the end of the project." }
+                ],
+                quiz: [
+                    {
+                        question: "An activity has an ES of 5 and a Duration of 3. What is its EF?",
+                        options: ["2", "5", "8", "15"],
+                        answer: "8"
+                    },
+                    {
+                        question: "Activity Z requires Activity X (EF=10) and Activity Y (EF=12) to be complete. What is the ES of Activity Z?",
+                        options: ["10", "12", "22", "2"],
+                        answer: "12"
+                    },
+                    {
+                        question: "What does 'Zero Slack' mean for an activity?",
+                        options: ["The activity is not important", "The activity can be delayed", "The activity is on the Critical Path", "The activity has a duration of 0"],
+                        answer: "The activity is on the Critical Path"
+                    },
+                    {
+                        question: "What does the Critical Path represent?",
+                        options: ["The shortest path in the project", "The path with the most activities", "The path with the cheapest activities", "The longest path, which determines the total project duration"],
+                        answer: "The longest path, which determines the total project duration"
+                    }
+                ]
+            },
+            {
+                id: 'q3',
+                title: "Resources, Budget & Costs",
+                icon: 'circle-dollar-sign',
+                notes: `
+                    <h2>Resources Availability</h2>
+                    <p><strong>Definition:</strong> The extent towhich the necessary resources (people, equipment, materials, etc.) are available when needed.</p>
+                    <p><strong>Considerations:</strong> Skills & Expertise, Capacity, Timing, Location, and Cost.</p>
+
+                    <h2>Budget Constraints</h2>
+                    <p><strong>Definition:</strong> The financial limitations imposed on the project – the total amount of money available.</p>
+                    <p><strong>Considerations:</strong> Total Budget, Budget Allocation, Contingency Reserves, and Management Reserves.</p>
+
+                    <h2>Resource Levelling</h2>
+                    <p><strong>Definition:</strong> A technique to adjust schedules to reduce resource over-allocations (e.g., one person assigned 16 hours of work in one day) <strong>without</strong> changing the project end date. This is done by using the 'slack' on non-critical activities.</p>
+                    <p><strong>Goal:</strong> Smooth out resource usage, improve utilization, and reduce conflicts.</p>
+
+                    <h2>Resource Constrained Planning</h2>
+                    <p><strong>Definition:</strong> A technique used when project resources are strictly limited and cannot be increased. This is a common, real-world constraint.</p>
+                    <p><strong>How it Works:</strong> The project schedule is dictated by the resource limits. If you only have one senior developer (a constraint), tasks that could otherwise run in parallel must now be done sequentially. This process often <strong>extends the project's critical path and delays the end date.</strong></p>
+                    <p><strong>Example:</strong> In a network diagram, Activity A and Activity B could start at the same time. But if they both require the same constrained resource (e.g., a testing machine), one must wait, and the project timeline will be longer than the original CPM calculation.</p>
+
+                    <h2>Types of Costs</h2>
+                    <ul>
+                        <li><strong>Direct Costs:</strong> Directly attributable to the project (e.g., project team salaries, materials).</li>
+                        <li><strong>Indirect Costs (Overhead):</strong> Necessary for the organization but not tied to one project (e.g., office rent, utilities).</li>
+                        <li><strong>Fixed Costs:</strong> Remain constant (e.g., rent, software licenses).</li>
+                        <li><strong>Variable Costs:</strong> Change with project scope or duration (e.g., materials per unit, hourly labor).</li>
+                    </ul>
+                `,
+                flashcards: [
+                    { term: "Resource Levelling", definition: "Technique to fix over-allocations using slack, *without* changing the project end date." },
+                    { term: "Resource Constrained Planning", definition: "Technique where limited resources dictate the schedule, often *extending* the project end date." },
+                    { term: "Budget Constraints", definition: "The financial limitations imposed on the project." },
+                    { term: "Direct Costs", definition: "Costs directly attributable to the project (e.g., project team salaries, materials)." },
+                    { term: "Indirect Costs (Overhead)", definition: "Costs not directly tied to a specific project (e.g., office rent, utilities)." },
+                    { term: "Fixed Costs", definition: "Costs that remain constant (e.g., rent, software licenses)." },
+                    { term: "Variable Costs", definition: "Costs that change with project scope or duration (e.g., hourly labor)." }
+                ],
+                quiz: [
+                    {
+                        question: "What is the key difference between Resource Levelling and Resource Constrained Planning?",
+                        options: ["Levelling is for budgets, Constrained is for time", "Levelling often extends the end date, Constrained does not", "Levelling uses slack to fix over-allocations, Constrained planning builds the schedule based on resource limits", "They are the same technique"],
+                        answer: "Levelling uses slack to fix over-allocations, Constrained planning builds the schedule based on resource limits"
+                    },
+                    {
+                        question: "The salary of a project team member is an example of what type of cost?",
+                        options: ["Indirect Cost", "Direct Cost", "Fixed Cost", "Management Reserve"],
+                        answer: "Direct Cost"
+                    },
+                    {
+                        question: "A company's office rent is typically considered what type of cost for a project?",
+                        options: ["Direct Cost", "Variable Cost", "Indirect Cost (Overhead)", "Contingency Reserve"],
+                        answer: "Indirect Cost (Overhead)"
+                    },
+                    {
+                        question: "Which scheduling technique is most likely to extend the project's critical path and delay the end date?",
+                        options: ["Resource Levelling", "Critical Path Method (CPM)", "Resource Constrained Planning", "Tuckman's Model"],
+                        answer: "Resource Constrained Planning"
+                    }
+                ]
+            },
+            {
+                id: 'q1',
+                title: "Team Dynamics & Leadership",
+                icon: 'users-round',
+                notes: `
+                    <h2>Tuckman's Model of Team Development (1965)</h2>
+                    <p>A 5-stage model describing how teams develop:</p>
+                    <ul>
+                        <li><strong>Forming:</strong> Team members get to know each other.</li>
+                        <li><strong>Storming:</strong> Conflicts arise as members assert opinions.</li>
+                        <li><strong>Norming:</strong> Conflicts resolve, norms are established. (Note: Conflict can still arise after this, as noted in the past paper).</li>
+                        <li><strong>Performing:</strong> The team reaches peak performance.</li>
+                        <li><strong>Adjourning:</strong> The team disbands.</li>
+                    </ul>
+
+                    <h2>Project Manager Leadership Skills</h2>
+                    <p>A PM must guide the team. Key leadership abilities include:</p>
+                    <ul>
+                        <li><strong>Setting the Vision:</strong> Clearly communicating the project's purpose and end goal ("the why") to motivate the team.</li>
+                        <li><strong>Facilitating Participation & Consultation:</strong> Creating an open environment where all team members feel safe to share ideas, ask questions, and contribute to decisions.</li>
+                        <li><strong>Empowering the Team:</strong> Delegating authority and trusting the team to make decisions and manage their own work, leading to higher morale and ownership.</li>
+                        <li><strong>Avoiding Unnecessary Work:</strong> Protecting the team from "scope creep" and "gold plating" (adding extra features) that don't add value, keeping them focused on what's essential.</li>
+                    </ul>
+
+                    <h2>Conflict Management</h2>
+                    <p>Conflict is inevitable. The PM must address it before it harms the project.</p>
+                    <h3>Common Sources of Conflict</h3>
+                    <ul>
+                        <li><strong>Schedules & Priorities:</strong> Disagreements about when tasks should be done or what is most important.</li>
+                        <li><strong>Resource Allocation:</strong> Two team members needing the same resource at the same time.</li>
+                        <li><strong>Technical Opinions:</strong> Disagreements on the best way to build something.</li>
+                        <li><strong>Personal Work Styles:</strong> Clashes in how people approach their work.</li>
+                    </ul>
+                    <h3>Conflict Handling Methods</h3>
+                    <ul>
+                        <li><strong>Compromising:</strong> A "lose-lose" solution where both parties give up something to find a middle ground. Useful when a quick, temporary fix is needed.</li>
+                        <li><strong>Accommodating:</strong> A "lose-win" solution where one party gives in to the other. Useful when the issue is more important to the other person or to preserve harmony.</li>
+                    </ul>
+
+                    <h2>Problem-Solving Approach</h2>
+                    <ol>
+                        <li><strong>Develop a Problem Statement:</strong> Clearly and concisely define the *actual* problem, not just the symptoms. (e.g., "The login page load time is 8 seconds," not "The app is slow").</li>
+                        <li><strong>Gather Data & Verify Causes:</strong> Collect facts and investigate potential root causes. (e.g., check server logs, database queries, network latency).</li>
+                        <li><strong>Evaluate Alternative Solutions:</strong> Brainstorm multiple potential solutions and evaluate them based on criteria like cost, time, and effectiveness.</li>
+                    </ol>
+                    
+                    <h2>Effective Time Management</h2>
+                    <ul>
+                        <li><strong>Prioritization:</strong> Using methods like the Eisenhower Matrix (Urgent/Important) to focus on high-value tasks.</li>
+                        <li><strong>Time Blocking:</strong> Scheduling specific blocks of time for specific tasks in your calendar.</li>
+                        <li><strong>The Pomodoro Technique:</strong> Working in focused 25-minute intervals with a 5-minute break.</li>
+                        <li><strong>Delegation:</strong> Assigning tasks to other team members when appropriate.</li>
+                        <li><strong>Avoiding Multitasking:</strong> Focusing on one task at a time to improve quality and speed.</li>
+                    </ul>
+                `,
+                flashcards: [
+                    { term: "Storming", definition: "Tuckman's stage of team development characterized by conflict and power struggles." },
+                    { term: "Performing", definition: "Tuckman's stage where the team is at peak performance and works cohesively." },
+                    { term: "PM Skill: Setting the Vision", definition: "Clearly communicating the project's purpose and end goal to motivate the team." },
+                    { term: "PM Skill: Empowering the Team", definition: "Delegating authority and trusting the team to manage their own work." },
+                    { term: "Source of Conflict", definition: "Common causes of disagreement, such as schedules, resource allocation, or technical opinions." },
+                    { term: "Conflict: Compromising", definition: "A 'lose-lose' strategy where both parties give up something to find a middle ground." },
+                    { term: "Conflict: Accommodating", definition: "A 'lose-win' strategy where one party gives in to the other to preserve harmony." },
+                    { term: "Problem Statement", definition: "A clear and concise definition of the *actual* problem, not just its symptoms." },
+                    { term: "Time Management: Prioritization", definition: "Techniques (e.g., Eisenhower Matrix) to determine which tasks to work on first." }
+                ],
+                quiz: [
+                    {
+                        question: "A PM who clearly communicates 'the why' of the project is demonstrating which skill?",
+                        options: ["Empowering the team", "Setting the vision", "Accommodating", "Avoiding unnecessary work"],
+                        answer: "Setting the vision"
+                    },
+                    {
+                        question: "Two developers disagree on a technical approach. To save time, they each agree to give up part of their idea. This is:",
+                        options: ["Accommodating", "Compromising", "Problem-Solving", "Storming"],
+                        answer: "Compromising"
+                    },
+                    {
+                        question: "You let another team member have their way on an issue because it's not very important to you. This is:",
+                        options: ["Accommodating", "Compromising", "Prioritizing", "Empowering"],
+                        answer: "Accommodating"
+                    },
+                    {
+                        question: "Working in focused 25-minute intervals is known as which time management technique?",
+                        options: ["Time Blocking", "Eisenhower Matrix", "The Pomodoro Technique", "Delegation"],
+                        answer: "The Pomodoro Technique"
+                    }
+                ]
+            },
+            {
+                id: 'q5',
+                title: "PMIS & PM Role",
+                icon: 'database-zap',
+                notes: `
+                    <h2>Project Management Information Systems (PMIS)</h2>
+                    <p><strong>Definition:</strong> A system (often software, but also processes and people) used to collect, store, manage, analyze, and distribute project information. It supports all project phases.</p>
+                    <p><strong>Purpose:</strong> Provide a central repository for data, facilitate communication, automate tasks, support decision-making, and improve project visibility and control.</p>
+                    <p><strong>Components/Examples:</strong> Microsoft Project, Jira, Asana, Slack, SharePoint, Google Drive, plus the defined processes for using them.</p>
+
+                    <h2>Role of the Project Manager using PMIS</h2>
+                    <ul>
+                        <li><strong>Initiation Phase:</strong>
+                            <ul><li>Use PMIS to document the project charter, identify initial stakeholders, and set up the project structure.</li></ul>
+                        </li>
+                        <li><strong>Planning Phase:</strong>
+                            <ul><li>Use PMIS to create the project plan (schedule, budget, tasks), define resources, and develop the risk register.</li></ul>
+                        </li>
+                        <li><strong>Execution Phase:</strong>
+                            <ul><li>Use PMIS to track task progress, facilitate team communication, and manage change requests.</li></ul>
+                        </li>
+                        <li><strong>Monitoring & Control Phase:</strong>
+                            <ul><li>Use PMIS to track performance against the plan (e.g., earned value), generate status reports, and monitor risks.</li></ul>
+                        </li>
+                        <li><strong>Closing Phase:</strong>
+                            <ul><li>Use PMIS to document final reports, archive lessons learned, and obtain final sign-off.</li></ul>
+                        </li>
+                    </ul>
+                `,
+                flashcards: [
+                    { term: "Project Management Information System (PMIS)", definition: "A system (software, processes, people) used to collect, store, manage, analyze, and distribute project information." },
+                    { term: "Purpose of PMIS", definition: "To provide a central data repository, facilitate communication, automate tasks, and support decision-making." },
+                    { term: "PMIS Examples", definition: "Jira, Asana, Microsoft Project, Slack, SharePoint, Google Drive." },
+                    { term: "PMIS in Planning Phase", definition: "Used to create the project plan, schedule, budget, and risk register." },
+                    { term: "PMIS in Execution Phase", definition: "Used to track task progress, facilitate team communication, and manage changes." },
+                    { term: "PMIS in Monitoring & Control", definition: "Used to track performance, generate status reports, and monitor risks." },
+                    { term: "PMIS in Closing Phase", definition: "Used to document final reports, archive lessons learned, and get sign-off." }
+                ],
+                quiz: [
+                    {
+                        question: "What is a PMIS?",
+                        options: ["A project manager's job title", "A risk management technique", "A system for collecting, storing, and managing project information", "A type of project budget"],
+                        answer: "A system for collecting, storing, and managing project information"
+                    },
+                    {
+                        question: "In which project phase would a PM use the PMIS to document the project charter?",
+                        options: ["Initiation", "Planning", "Execution", "Closing"],
+                        answer: "Initiation"
+                    },
+                    {
+                        question: "Tracking task progress and managing change requests within the PMIS primarily occurs in which phase?",
+                        options: ["Initiation", "Planning", "Execution", "Closing"],
+                        answer: "Execution"
+                    },
+                    {
+                        question: "Generating status reports and tracking performance against the baseline plan is done in which phase?",
+                        options: ["Planning", "Execution", "Monitoring & Control", "Closing"],
+                        answer: "Monitoring & Control"
+                    }
+                ]
+            },
+            {
+                id: 'q6',
+                title: "MVP, Scrum & Kanban",
+                icon: 'refresh-cw',
+                notes: `
+                    <h2>Minimum Viable Product (MVP)</h2>
+                    <p><strong>Definition:</strong> The simplest version of a product that has enough features to satisfy early adopters and provide feedback for future development. It focuses on the core value proposition.</p>
+                    <p><strong>Purpose:</strong> Validate a product idea quickly, gather early user feedback, and reduce development costs.</p>
+
+                    <h2>Scrum</h2>
+                    <p><strong>Definition:</strong> An iterative and incremental agile framework for managing complex projects. It's based on time-boxes (Sprints) and emphasizes collaboration, transparency, and adaptation.</p>
+                    <h3>Key Elements:</h3>
+                    <ul>
+                        <li><strong>Roles:</strong> Product Owner (defines *what*), Scrum Master (facilitates *how*), Development Team (builds).</li>
+                        <li><strong>Artifacts:</strong> Product Backlog (all features), Sprint Backlog (features for this sprint), Increment (shippable product).</li>
+                        <li><strong>Events:</strong> Sprint Planning, Daily Scrum, Sprint Review, Sprint Retrospective.</li>
+                        <li><strong>Sprint:</strong> A time-boxed period (1-4 weeks) to create an Increment.</li>
+                    </ul>
+
+                    <h2>Kanban</h2>
+                    <p><strong>Definition:</strong> An agile method for managing workflow. It focuses on visualizing the work, limiting work in progress (WIP), and continuously improving flow.</p>
+                    <h3>Key Principles:</h3>
+                    <ul>
+                        <li><strong>Visualize Workflow:</strong> Use a Kanban board (To Do, In Progress, Done).</li>
+                        <li><strong>Limit Work in Progress (WIP):</strong> Set explicit limits on items allowed in each stage (e.g., max 3 items "In Progress").</li>
+                        <li><strong>Manage Flow:</strong> Focus on moving work items smoothly.</li>
+                        <li><strong>Make Policies Explicit:</strong> Clearly define rules for moving items.</li>
+                    </ul>
+                    <p><strong>Difference from Scrum:</strong> Scrum is time-boxed (Sprints) with specific roles/events. Kanban is flow-based, focusing on WIP limits and continuous improvement without prescribed time-boxes.</p>
+                `,
+                flashcards: [
+                    { term: "Minimum Viable Product (MVP)", definition: "The simplest version of a product with just enough features to satisfy early adopters and gather feedback." },
+                    { term: "Purpose of MVP", definition: "To validate a product idea quickly, gather feedback, and reduce development costs." },
+                    { term: "Scrum", definition: "An iterative agile framework using time-boxed Sprints, specific roles (PO, SM, Team), and events to manage complex projects." },
+                    { term: "Product Owner (Scrum)", definition: "The role responsible for representing stakeholders and defining/prioritizing the Product Backlog." },
+                    { term: "Scrum Master (Scrum)", definition: "The role responsible for facilitating the Scrum process, removing impediments, and coaching the team." },
+                    { term: "Sprint (Scrum)", definition: "A time-boxed period (typically 1-4 weeks) during which the team works to create a usable Increment." },
+                    { term: "Kanban", definition: "An agile method focused on visualizing workflow, limiting Work inA: Progress (WIP), and managing flow." },
+                    { term: "Limit Work in Progress (WIP)", definition: "A core principle of Kanban; sets a maximum number of items allowed in a workflow stage to prevent bottlenecks." },
+                    { term: "Scrum vs. Kanban", definition: "Scrum uses time-boxed Sprints and defined roles; Kanban is flow-based and focuses on WIP limits." }
+                ],
+                quiz: [
+                    {
+                        question: "What is the primary goal of a Minimum Viable Product (MVP)?",
+                        options: ["To release a perfect, feature-complete product", "To validate an idea and get user feedback quickly", "To follow the Scrum framework", "To create a detailed project plan"],
+                        answer: "To validate an idea and get user feedback quickly"
+                    },
+                    {
+                        question: "In Scrum, who is responsible for prioritizing the Product Backlog?",
+                        options: ["Scrum Master", "Development Team", "Project Manager", "Product Owner"],
+                        answer: "Product Owner"
+                    },
+                    {
+                        question: "What is the core principle of Kanban that prevents bottlenecks and encourages focus?",
+                        options: ["Sprints", "Daily Scrums", "Limiting Work in Progress (WIP)", "Sprint Retrospectives"],
+                        answer: "Limiting Work in Progress (WIP)"
+                    },
+                    {
+                        question: "Which agile framework is built around time-boxed iterations called Sprints?",
+                        options: ["Kanban", "Scrum", "MVP", "Tuckman's Model"],
+                        answer: "Scrum"
+                    }
+                ]
+            },
+            {
+                id: 'q7',
+                title: "Scrum Meetings & Benefits",
+                icon: 'message-square-text',
+                notes: `
+                    <h2>Scrum Meetings (Events)</h2>
+                    <dl>
+                        <dt><strong>Sprint Planning</strong></dt>
+                        <dd><strong>Purpose:</strong> To plan the work for the upcoming Sprint. The team selects items from the Product Backlog and creates the Sprint Backlog.</dd>
+                        
+                        <dt><strong>Daily Scrum (Stand-up)</strong></dt>
+                        <dd><strong>Purpose:</strong> To synchronize team activities, discuss progress, and identify impediments. (15 mins, 3 questions: What I did yesterday? What I will do today? Any impediments?)</dd>
+                        
+                        <dt><strong>Sprint Review</strong></dt>
+                        <dd><strong>Purpose:</strong> To demonstrate the completed Increment to stakeholders and gather feedback. This is about the *product*.</dd>
+                        
+                        <dt><strong>Sprint Retrospective</strong></dt>
+                        <dd><strong>Purpose:</strong> For the team to reflect on the past Sprint and identify areas for improvement in their *process*.</dd>
+                    </dl>
+
+                    <h2>Benefits of Scrum</h2>
+                    <ul>
+                        <li><strong>Increased Transparency:</strong> Progress and issues are visible to all.</li>
+                        <li><strong>Faster Delivery:</strong> Working increments delivered frequently for early feedback.</li>
+                        <li><strong>Improved Adaptability:</strong> Can respond quickly to changing requirements.</li>
+                        <li><strong>Enhanced Collaboration:</strong> Encourages close teamwork.</li>
+                        <li><strong>Higher Quality:</strong> Continuous testing and feedback loops.</li>
+                        <li><strong>Increased Team Morale:</strong> Empowered, self-organizing teams.</li>
+                    </ul>
+
+                    <h2>Drawbacks of Scrum</h2>
+                    <ul>
+                        <li>Requires a dedicated and experienced team.</li>
+                        <li>Can be challenging to implement (requires culture shift).</li>
+                        <li>Potential for scope creep if Product Backlog isn't managed well.</li>
+                        <li>Requires an experienced Scrum Master to be effective.</li>
+                    </ul>
+                `,
+                flashcards: [
+                    { term: "Sprint Planning", definition: "Scrum event to plan work for the upcoming Sprint by creating the Sprint Backlog." },
+                    { term: "Daily Scrum", definition: "15-min daily meeting to synchronize, discuss progress (Yesterday, Today, Impediments), and identify blocks." },
+                    { term: "Sprint Review", definition: "Scrum event to demonstrate the completed Increment (the *product*) to stakeholders and gather feedback." },
+                    { term: "Sprint Retrospective", definition: "Scrum event for the team to reflect on and improve its *process* (what went well, what didn't)." },
+                    { term: "Benefit of Scrum", definition: "Increased transparency, faster delivery, improved adaptability, and enhanced collaboration." },
+                    { term: "Drawback of Scrum", definition: "Can be challenging to implement, requires an experienced Scrum Master, and can lead to scope creep if not managed." }
+                ],
+                quiz: [
+                    {
+                        question: "Which Scrum event is focused on demonstrating the working product to stakeholders for feedback?",
+                        options: ["Daily Scrum", "Sprint Retrospective", "Sprint Review", "Sprint Planning"],
+                        answer: "Sprint Review"
+                    },
+                    {
+                        question: "The purpose of the Sprint Retrospective is to:",
+                        options: ["Plan the next sprint", "Demonstrate the product", "Identify improvements to the team's *process*", "Discuss impediments with the Scrum Master"],
+                        answer: "Identify improvements to the team's *process*"
+                    },
+                    {
+                        question: "What are the three questions typically answered in a Daily Scrum?",
+                        options: ["What I did yesterday? What I will do today? Any impediments?", "What is the budget? What is the deadline? Who is in charge?", "What went well? What went wrong? How can we improve?", "What is the Sprint Goal? What is the product? Who are the stakeholders?"],
+                        answer: "What I did yesterday? What I will do today? Any impediments?"
+                    },
+                    {
+                        question: "Which of the following is a key *benefit* of Scrum?",
+                        options: ["Guarantees no scope creep", "Requires no experienced team members", "Increased transparency and adaptability", "Works best with fixed, unchanging requirements"],
+                        answer: "Increased transparency and adaptability"
+                    }
+                ]
+            },
+        ];
+
+        // --- APPLICATION STATE ---
+        let currentTopicId = studyData[0].id; // Default to the first topic
+        let currentMode = 'notes'; // 'notes', 'flashcards', 'quiz'
+
+        // --- DOM ELEMENTS ---
+        const sidebarNav = document.getElementById('sidebar-nav');
+        const mainTopicTitle = document.getElementById('main-topic-title');
+        const modeSwitcher = document.getElementById('mode-switcher');
+        const notesContainer = document.getElementById('notes-container');
+        const flashcardContainer = document.getElementById('flashcard-container');
+        const flashcardGrid = document.getElementById('flashcard-grid');
+        const quizContainer = document.getElementById('quiz-container');
+        const quizContent = document.getElementById('quiz-content');
+        const quizSubmitBtn = document.getElementById('quiz-submit-btn');
+        const quizResults = document.getElementById('quiz-results');
+
+        // --- RENDER FUNCTIONS ---
+
+        /**
+         * Initializes the sidebar navigation.
+         */
+        function initSidebar() {
+            sidebarNav.innerHTML = '';
+            studyData.forEach(topic => {
+                const isActive = topic.id === currentTopicId;
+                sidebarNav.innerHTML += `
+                    <li>
+                        <a href="#" 
+                           class="flex items-center p-3 my-1 rounded-lg transition-colors ${isActive ? 'bg-blue-600 text-white font-semibold shadow-md' : 'text-gray-600 hover:bg-gray-100'}"
+                           data-topic-id="${topic.id}">
+                            <i data-lucide="${topic.icon}" class="w-5 h-5 mr-3 flex-shrink-0"></i>
+                            <span class="flex-grow">${topic.title}</span>
+                        </a>
+                    </li>
+                `;
+            });
+            // Add click listeners to new links
+            sidebarNav.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    currentTopicId = link.dataset.topicId;
+                    currentMode = 'notes'; // Default to notes when switching topics
+                    renderAll();
+                });
+            });
+        }
+
+        /**
+         * Renders the mode-switcher buttons (Notes, Flashcards, Quiz).
+         */
+        function renderModeSwitcher() {
+            const getButtonClass = (mode) => {
+                return currentMode === mode
+                    ? 'bg-blue-600 text-white shadow'
+                    : 'text-gray-600 hover:bg-gray-300';
+            };
+
+            modeSwitcher.innerHTML = `
+                <button data-mode="notes" class="px-4 py-1.5 rounded-md font-medium text-sm transition-all ${getButtonClass('notes')}">
+                    <i data-lucide="file-text" class="w-4 h-4 inline-block mr-1 -mt-0.5"></i> Notes
+                </button>
+                <button data-mode="flashcards" class="px-4 py-1.5 rounded-md font-medium text-sm transition-all ${getButtonClass('flashcards')}">
+                    <i data-lucide="layers" class="w-4 h-4 inline-block mr-1 -mt-0.5"></i> Flashcards
+                </button>
+                <button data-mode="quiz" class="px-4 py-1.5 rounded-md font-medium text-sm transition-all ${getButtonClass('quiz')}">
+                    <i data-lucide="help-circle" class="w-4 h-4 inline-block mr-1 -mt-0.5"></i> Quiz
+                </button>
+            `;
+            // Add click listeners
+            modeSwitcher.querySelectorAll('button').forEach(button => {
+                button.addEventListener('click', () => {
+                    currentMode = button.dataset.mode;
+                    renderAll();
+                });
+            });
+        }
+
+        /**
+         * Gets the data object for the currently selected topic.
+         */
+        function getCurrentTopic() {
+            return studyData.find(topic => topic.id === currentTopicId) || studyData[0];
+        }
+
+        /**
+         * Renders the notes for the current topic.
+         */
+        function renderNotes() {
+            const topic = getCurrentTopic();
+            notesContainer.innerHTML = topic.notes;
+        }
+
+        /**
+         * Renders the flashcards for the current topic.
+         */
+        function renderFlashcards() {
+            const topic = getCurrentTopic();
+            flashcardGrid.innerHTML = '';
+            topic.flashcards.forEach(card => {
+                const cardEl = document.createElement('div');
+                cardEl.className = 'flashcard h-60 rounded-xl shadow-lg cursor-pointer perspective';
+                cardEl.innerHTML = `
+                    <div class="relative w-full h-full flashcard-face bg-white rounded-xl p-6 flex items-center justify-center text-center">
+                        <p class="text-xl font-semibold text-gray-800">${card.term}</p>
+                    </div>
+                    <div class="absolute w-full h-full top-0 left-0 flashcard-face flashcard-back bg-blue-600 text-white rounded-xl p-6 flex items-center justify-center text-center">
+                        <p class="text-lg">${card.definition}</p>
+                    </div>
+                `;
+                cardEl.addEventListener('click', () => {
+                    cardEl.classList.toggle('is-flipped');
+                });
+                flashcardGrid.appendChild(cardEl);
+            });
+        }
+
+        /**
+         * Renders the quiz for the current topic.
+         */
+        function renderQuiz() {
+            const topic = getCurrentTopic();
+            quizContent.innerHTML = '';
+            topic.quiz.forEach((q, index) => {
+                const optionsHtml = q.options.map((option, i) => `
+                    <label for="q${index}_o${i}" class="block p-4 rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer has-[:checked]:bg-blue-50 has-[:checked]:border-blue-300">
+                        <input type="radio" name="question_${index}" id="q${index}_o${i}" value="${option}" class="mr-3 text-blue-600 focus:ring-blue-500">
+                        <span class="text-gray-700">${option}</span>
+                    </label>
+                `).join('');
+
+                quizContent.innerHTML += `
+                    <div class="question-block" data-question-index="${index}">
+                        <p class="text-lg font-medium text-gray-900 mb-4">${index + 1}. ${q.question}</p>
+                        <div class="space-y-3">
+                            ${optionsHtml}
+                        </div>
+                        <div class="mt-2 text-sm font-medium result-feedback"></div>
+                    </div>
+                `;
+            });
+            // Reset results display
+            quizSubmitBtn.style.display = 'block';
+            quizResults.style.display = 'none';
+            quizResults.innerHTML = '';
+        }
+
+        /**
+         * Checks the submitted quiz answers.
+         */
+        function checkQuiz() {
+            const topic = getCurrentTopic();
+            let correctAnswers = 0;
+            
+            const questionBlocks = quizContent.querySelectorAll('.question-block');
+            questionBlocks.forEach((block, index) => {
+                const q = topic.quiz[index];
+                const selectedInput = block.querySelector(`input[name="question_${index}"]:checked`);
+                const feedbackEl = block.querySelector('.result-feedback');
+                
+                if (selectedInput) {
+                    if (selectedInput.value === q.answer) {
+                        correctAnswers++;
+                        feedbackEl.innerHTML = '<span class="text-green-600">Correct!</span>';
+                        selectedInput.parentElement.classList.add('border-green-400', 'bg-green-50');
+                    } else {
+                        feedbackEl.innerHTML = `<span class="text-red-600">Incorrect. Correct answer: ${q.answer}</span>`;
+                        selectedInput.parentElement.classList.add('border-red-400', 'bg-red-50');
+                    }
+                } else {
+                    feedbackEl.innerHTML = `<span class="text-gray-500">No answer selected. Correct answer: ${q.answer}</span>`;
+                }
+            });
+
+            // Display final score
+            const score = (correctAnswers / topic.quiz.length) * 100;
+            quizResults.innerHTML = `You scored ${correctAnswers} out of ${topic.quiz.length} (${score.toFixed(0)}%)`;
+            quizResults.style.display = 'block';
+            quizSubmitBtn.style.display = 'none'; // Hide submit button after checking
+        }
+
+        /**
+         * Main render function to update the entire UI based on state.
+         */
+        function renderAll() {
+            // Ensure state is valid
+            if (!studyData.find(t => t.id === currentTopicId)) {
+                currentTopicId = studyData[0].id;
+            }
+            const topic = getCurrentTopic();
+
+            // Update sidebar (only needs to re-render to set active class)
+            initSidebar();
+
+            // Update header
+            mainTopicTitle.textContent = topic.title;
+            renderModeSwitcher();
+
+            // Show/hide content containers
+            notesContainer.style.display = currentMode === 'notes' ? 'block' : 'none';
+            flashcardContainer.style.display = currentMode === 'flashcards' ? 'block' : 'none';
+            quizContainer.style.display = currentMode === 'quiz' ? 'block' : 'none';
+
+            // Render content for the active mode
+            if (currentMode === 'notes') {
+                renderNotes();
+            } else if (currentMode === 'flashcards') {
+                renderFlashcards();
+            } else if (currentMode === 'quiz') {
+                renderQuiz();
+            }
+            
+            // Re-initialize icons
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        }
+
+        // --- INITIALIZATION ---
+        window.onload = () => {
+            renderAll();
+            quizSubmitBtn.addEventListener('click', checkQuiz);
+        };
+    </script>
+</body>
+</html>
 
