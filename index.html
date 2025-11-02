@@ -12,10 +12,36 @@
     <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
     
     <style>
+        /* Custom font */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Animation for content switching */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content-panel {
+            /* This animation will be applied by JS */
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        /* Add perspective for 3D flashcard flip */
+        .perspective {
+            perspective: 1000px;
+        }
+
         /* Custom styles for flashcard flipping */
         .flashcard {
             transform-style: preserve-3d;
-            transition: transform 0.6s;
+            transition: transform 0.6s, box-shadow 0.3s;
+        }
+        .flashcard:hover {
+            box-shadow: 0 10px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
         }
         .flashcard.is-flipped {
             transform: rotateY(180deg);
@@ -30,38 +56,118 @@
 
         /* Custom scrollbar */
         ::-webkit-scrollbar {
-            width: 6px;
+            width: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #f1f5f9; /* gray-100 */
+            background: #f1f5f9; /* slate-100 */
         }
         ::-webkit-scrollbar-thumb {
-            background: #94a3b8; /* gray-400 */
-            border-radius: 3px;
+            background: #94a3b8; /* slate-400 */
+            border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #64748b; /* gray-500 */
+            background: #64748b; /* slate-500 */
+        }
+
+        /* Custom styles for quiz radio buttons */
+        .quiz-option input[type="radio"] {
+            display: none; /* Hide the default radio button */
+        }
+        .quiz-option label {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e2e8f0; /* slate-200 */
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease-out;
+            position: relative;
+        }
+        .quiz-option label:hover {
+            background-color: #f8fafc; /* slate-50 */
+            border-color: #94a3b8; /* slate-400 */
+        }
+        /* Custom radio circle */
+        .quiz-option label::before {
+            content: '';
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 2px solid #cbd5e1; /* slate-300 */
+            border-radius: 50%;
+            margin-right: 0.75rem;
+            transition: all 0.2s ease-out;
+            flex-shrink: 0;
+        }
+        .quiz-option input[type="radio"]:checked + label {
+            background-color: #f0f9ff; /* blue-50 */
+            border-color: #3b82f6; /* blue-500 */
+            color: #1e40af; /* blue-800 */
+            font-weight: 600;
+        }
+        .quiz-option input[type="radio"]:checked + label::before {
+            border-color: #3b82f6; /* blue-500 */
+            background-color: #3b82f6; /* blue-500 */
+            box-shadow: 0 0 0 3px white inset;
+        }
+
+        /* Feedback styles */
+        .quiz-option.correct label {
+            background-color: #f0fdf4; /* green-50 */
+            border-color: #22c55e; /* green-500 */
+            color: #15803d; /* green-700 */
+            font-weight: 600;
+        }
+        .quiz-option.correct label::before {
+            border-color: #22c55e; /* green-500 */
+            background-color: #22c55e;
+            box-shadow: 0 0 0 3px white inset;
+        }
+
+        .quiz-option.incorrect label {
+            background-color: #fef2f2; /* red-50 */
+            border-color: #ef4444; /* red-500 */
+            color: #b91c1c; /* red-700 */
+            font-weight: 600;
+        }
+         .quiz-option.incorrect label::before {
+            border-color: #ef4444; /* red-500 */
+            background-color: #ef4444;
+            box-shadow: 0 0 0 3px white inset;
+        }
+
+        .quiz-option.show-correct label {
+            background-color: #f0fdf4; /* green-50 */
+            border-color: #22c55e; /* green-500 */
+            color: #15803d; /* green-700 */
+            font-weight: 600;
+        }
+        .quiz-option.show-correct label::before {
+            border-color: #22c55e; /* green-500 */
+            background-color: #22c55e;
+            box-shadow: 0 0 0 3px white inset;
         }
     </style>
 </head>
-<body class="bg-gray-100 font-sans">
+<body class="bg-slate-100 font-sans antialiased">
 
     <div class="flex h-screen">
         <!-- Sidebar Navigation -->
-        <nav class="w-72 bg-white shadow-lg h-full flex flex-col flex-shrink-0">
-            <div class="p-6 border-b">
-                <h1 class="text-2xl font-bold text-blue-700 flex items-center">
-                    <i data-lucide="book-open-check" class="mr-2"></i>
+        <nav class="w-72 bg-white shadow-xl h-full flex flex-col flex-shrink-0">
+            <!-- Sidebar Header -->
+            <div class="p-6 border-b border-white/20 bg-gradient-to-br from-blue-700 to-blue-600">
+                <h1 class="text-2xl font-bold text-white flex items-center">
+                    <i data-lucide="book-open-check" class="mr-2.5"></i>
                     PM Study Hub
                 </h1>
-                <p class="text-sm text-gray-500">Your Exam Prep Center</p>
+                <p class="text-sm text-blue-100 opacity-90">Your Exam Prep Center</p>
             </div>
-            <div class="overflow-y-auto flex-grow p-4 space-y-2">
+            <!-- Navigation Links -->
+            <div class="overflow-y-auto flex-grow p-4 space-y-1">
                 <ul id="sidebar-nav">
                     <!-- Navigation links will be populated by JS -->
                 </ul>
             </div>
-            <div class="p-4 border-t text-xs text-gray-400">
+            <div class="p-4 border-t border-slate-200 text-xs text-slate-400">
                 Created to help you ace your exam.
             </div>
         </nav>
@@ -69,38 +175,38 @@
         <!-- Main Content Area -->
         <main class="flex-1 flex flex-col h-screen">
             <!-- Header -->
-            <header class="bg-white border-b border-gray-200 p-4 flex justify-between items-center">
-                <h2 id="main-topic-title" class="text-3xl font-bold text-gray-800">
+            <header class="bg-white border-b border-slate-200 p-4 flex justify-between items-center z-10 shadow-sm">
+                <h2 id="main-topic-title" class="text-3xl font-bold text-slate-800">
                     <!-- Topic title will be populated by JS -->
                 </h2>
-                <div id="mode-switcher" class="flex space-x-2 rounded-lg bg-gray-200 p-1">
+                <div id="mode-switcher" class="flex space-x-2 rounded-lg bg-slate-200 p-1">
                     <!-- Mode buttons will be populated by JS -->
                 </div>
             </header>
 
             <!-- Content Container -->
-            <div id="content-container" class="flex-1 p-6 lg:p-10 overflow-y-auto bg-gray-50">
+            <div id="content-container" class="flex-1 p-6 lg:p-10 overflow-y-auto bg-slate-50">
                 <!-- Notes Container -->
-                <div id="notes-container" class="prose prose-blue max-w-none prose-h2:font-semibold prose-h2:text-gray-700 prose-h2:border-b prose-h2:pb-2 prose-h3:font-medium prose-h3:text-blue-600 prose-strong:text-gray-700 prose-ul:list-disc prose-ul:ml-5 prose-li:my-1 prose-table:border prose-th:border prose-th:p-2 prose-td:border prose-td:p-2">
+                <div id="notes-panel" class="content-panel prose prose-slate max-w-none prose-h2:font-semibold prose-h2:text-slate-700 prose-h2:border-b prose-h2:pb-2 prose-h3:font-medium prose-h3:text-blue-600 prose-strong:text-slate-700 prose-ul:list-disc prose-ul:ml-5 prose-li:my-1 prose-table:border prose-th:border prose-th:p-2 prose-td:border prose-td:p-2 prose-a:text-blue-600 hover:prose-a:text-blue-700">
                     <!-- Notes content will be populated by JS -->
                 </div>
 
                 <!-- Flashcard Container -->
-                <div id="flashcard-container" class="hidden">
-                    <div id="flashcard-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div id="flashcard-panel" class="content-panel hidden">
+                    <div id="flashcard-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 perspective">
                         <!-- Flashcards will be populated by JS -->
                     </div>
                 </div>
 
                 <!-- Quiz Container -->
-                <div id="quiz-container" class="hidden max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-lg">
-                    <div id="quiz-content" class="space-y-8">
+                <div id="quiz-panel" class="content-panel hidden max-w-3xl mx-auto">
+                    <div id="quiz-content" class="bg-white p-8 rounded-xl shadow-xl space-y-8">
                         <!-- Quiz questions will be populated by JS -->
                     </div>
-                    <button id="quiz-submit-btn" class="mt-8 w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                    <button id="quiz-submit-btn" class="mt-8 w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-blue-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transform hover:-translate-y-0.5 active:translate-y-0">
                         Check My Answers
                     </button>
-                    <div id="quiz-results" class="hidden mt-6 text-2xl font-bold text-center"></div>
+                    <div id="quiz-results" class="hidden mt-8 text-3xl font-bold text-center text-slate-700 bg-white p-8 rounded-xl shadow-xl"></div>
                 </div>
             </div>
         </main>
@@ -624,7 +730,7 @@
                 icon: 'message-square-text',
                 notes: `
                     <h2>Scrum Meetings (Events)</h2>
-                    <dl>
+                    <dl class="space-y-4">
                         <dt><strong>Sprint Planning</strong></dt>
                         <dd><strong>Purpose:</strong> To plan the work for the upcoming Sprint. The team selects items from the Product Backlog and creates the Sprint Backlog.</dd>
                         
@@ -697,10 +803,15 @@
         const sidebarNav = document.getElementById('sidebar-nav');
         const mainTopicTitle = document.getElementById('main-topic-title');
         const modeSwitcher = document.getElementById('mode-switcher');
-        const notesContainer = document.getElementById('notes-container');
-        const flashcardContainer = document.getElementById('flashcard-container');
+        
+        const notesPanel = document.getElementById('notes-panel');
+        const flashcardPanel = document.getElementById('flashcard-panel');
+        const quizPanel = document.getElementById('quiz-panel');
+
+        const notesContainer = document.getElementById('notes-panel'); // Kept for compatibility
         const flashcardGrid = document.getElementById('flashcard-grid');
-        const quizContainer = document.getElementById('quiz-container');
+        const quizContainer = document.getElementById('quiz-panel'); // Kept for compatibility
+        
         const quizContent = document.getElementById('quiz-content');
         const quizSubmitBtn = document.getElementById('quiz-submit-btn');
         const quizResults = document.getElementById('quiz-results');
@@ -717,7 +828,9 @@
                 sidebarNav.innerHTML += `
                     <li>
                         <a href="#" 
-                           class="flex items-center p-3 my-1 rounded-lg transition-colors ${isActive ? 'bg-blue-600 text-white font-semibold shadow-md' : 'text-gray-600 hover:bg-gray-100'}"
+                           class="flex items-center p-3 my-1 rounded-lg transition-all duration-200 ${isActive 
+                                ? 'bg-blue-600 text-white font-semibold shadow-md hover:bg-blue-600' 
+                                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}"
                            data-topic-id="${topic.id}">
                             <i data-lucide="${topic.icon}" class="w-5 h-5 mr-3 flex-shrink-0"></i>
                             <span class="flex-grow">${topic.title}</span>
@@ -729,9 +842,12 @@
             sidebarNav.querySelectorAll('a').forEach(link => {
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
-                    currentTopicId = link.dataset.topicId;
-                    currentMode = 'notes'; // Default to notes when switching topics
-                    renderAll();
+                    const newTopicId = link.dataset.topicId;
+                    if (newTopicId !== currentTopicId) {
+                        currentTopicId = newTopicId;
+                        currentMode = 'notes'; // Default to notes when switching topics
+                        renderAll();
+                    }
                 });
             });
         }
@@ -742,8 +858,8 @@
         function renderModeSwitcher() {
             const getButtonClass = (mode) => {
                 return currentMode === mode
-                    ? 'bg-blue-600 text-white shadow'
-                    : 'text-gray-600 hover:bg-gray-300';
+                    ? 'bg-white text-blue-700 shadow rounded-md font-semibold'
+                    : 'text-slate-600 hover:bg-white/60 hover:text-slate-900';
             };
 
             modeSwitcher.innerHTML = `
@@ -760,8 +876,11 @@
             // Add click listeners
             modeSwitcher.querySelectorAll('button').forEach(button => {
                 button.addEventListener('click', () => {
-                    currentMode = button.dataset.mode;
-                    renderAll();
+                    const newMode = button.dataset.mode;
+                    if (newMode !== currentMode) {
+                        currentMode = newMode;
+                        renderAll();
+                    }
                 });
             });
         }
@@ -778,7 +897,7 @@
          */
         function renderNotes() {
             const topic = getCurrentTopic();
-            notesContainer.innerHTML = topic.notes;
+            notesPanel.innerHTML = topic.notes;
         }
 
         /**
@@ -789,13 +908,14 @@
             flashcardGrid.innerHTML = '';
             topic.flashcards.forEach(card => {
                 const cardEl = document.createElement('div');
-                cardEl.className = 'flashcard h-60 rounded-xl shadow-lg cursor-pointer perspective';
+                cardEl.className = 'flashcard h-64 rounded-xl shadow-lg cursor-pointer';
                 cardEl.innerHTML = `
-                    <div class="relative w-full h-full flashcard-face bg-white rounded-xl p-6 flex items-center justify-center text-center">
-                        <p class="text-xl font-semibold text-gray-800">${card.term}</p>
+                    <div class="relative w-full h-full flashcard-face bg-white rounded-xl p-6 flex flex-col items-center justify-center text-center">
+                        <p class="text-xl font-semibold text-slate-800">${card.term}</p>
+                        <span class="mt-4 text-xs text-slate-400 font-medium absolute bottom-4">Click to flip</span>
                     </div>
                     <div class="absolute w-full h-full top-0 left-0 flashcard-face flashcard-back bg-blue-600 text-white rounded-xl p-6 flex items-center justify-center text-center">
-                        <p class="text-lg">${card.definition}</p>
+                        <p class="text-lg font-medium">${card.definition}</p>
                     </div>
                 `;
                 cardEl.addEventListener('click', () => {
@@ -813,19 +933,21 @@
             quizContent.innerHTML = '';
             topic.quiz.forEach((q, index) => {
                 const optionsHtml = q.options.map((option, i) => `
-                    <label for="q${index}_o${i}" class="block p-4 rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer has-[:checked]:bg-blue-50 has-[:checked]:border-blue-300">
-                        <input type="radio" name="question_${index}" id="q${index}_o${i}" value="${option}" class="mr-3 text-blue-600 focus:ring-blue-500">
-                        <span class="text-gray-700">${option}</span>
-                    </label>
+                    <div class="quiz-option">
+                        <input type="radio" name="question_${index}" id="q${index}_o${i}" value="${option}">
+                        <label for="q${index}_o${i}">
+                            <span classg="text-slate-700">${option}</span>
+                        </label>
+                    </div>
                 `).join('');
 
                 quizContent.innerHTML += `
                     <div class="question-block" data-question-index="${index}">
-                        <p class="text-lg font-medium text-gray-900 mb-4">${index + 1}. ${q.question}</p>
+                        <p class="text-lg font-semibold text-slate-900 mb-4">${index + 1}. ${q.question}</p>
                         <div class="space-y-3">
                             ${optionsHtml}
                         </div>
-                        <div class="mt-2 text-sm font-medium result-feedback"></div>
+                        <div class="mt-4 text-sm font-medium result-feedback"></div>
                     </div>
                 `;
             });
@@ -848,17 +970,30 @@
                 const selectedInput = block.querySelector(`input[name="question_${index}"]:checked`);
                 const feedbackEl = block.querySelector('.result-feedback');
                 
+                // Disable all inputs for this question
+                block.querySelectorAll('input[type="radio"]').forEach(input => {
+                    input.disabled = true;
+                });
+
                 if (selectedInput) {
+                    const selectedOptionWrapper = selectedInput.parentElement;
                     if (selectedInput.value === q.answer) {
                         correctAnswers++;
-                        feedbackEl.innerHTML = '<span class="text-green-600">Correct!</span>';
-                        selectedInput.parentElement.classList.add('border-green-400', 'bg-green-50');
+                        selectedOptionWrapper.classList.add('correct');
                     } else {
-                        feedbackEl.innerHTML = `<span class="text-red-600">Incorrect. Correct answer: ${q.answer}</span>`;
-                        selectedInput.parentElement.classList.add('border-red-400', 'bg-red-50');
+                        selectedOptionWrapper.classList.add('incorrect');
+                        // Also show the correct answer
+                        const correctInput = block.querySelector(`input[value="${q.answer}"]`);
+                        if (correctInput) {
+                            correctInput.parentElement.classList.add('show-correct');
+                        }
                     }
                 } else {
-                    feedbackEl.innerHTML = `<span class="text-gray-500">No answer selected. Correct answer: ${q.answer}</span>`;
+                    // No answer was selected, just show the correct one
+                    const correctInput = block.querySelector(`input[value="${q.answer}"]`);
+                    if (correctInput) {
+                        correctInput.parentElement.classList.add('show-correct');
+                    }
                 }
             });
 
@@ -885,19 +1020,32 @@
             // Update header
             mainTopicTitle.textContent = topic.title;
             renderModeSwitcher();
+            
+            // Get all content panels
+            const panels = [notesPanel, flashcardPanel, quizPanel];
 
-            // Show/hide content containers
-            notesContainer.style.display = currentMode === 'notes' ? 'block' : 'none';
-            flashcardContainer.style.display = currentMode === 'flashcards' ? 'block' : 'none';
-            quizContainer.style.display = currentMode === 'quiz' ? 'block' : 'none';
+            // Hide all panels first
+            panels.forEach(panel => panel.classList.add('hidden'));
 
-            // Render content for the active mode
+            let activePanel;
             if (currentMode === 'notes') {
+                activePanel = notesPanel;
                 renderNotes();
             } else if (currentMode === 'flashcards') {
+                activePanel = flashcardPanel;
                 renderFlashcards();
             } else if (currentMode === 'quiz') {
+                activePanel = quizPanel;
                 renderQuiz();
+            }
+
+            // Show and animate the active panel
+            if (activePanel) {
+                activePanel.classList.remove('hidden');
+                // Re-trigger animation
+                activePanel.style.animation = 'none';
+                activePanel.offsetHeight; /* trigger reflow */
+                activePanel.style.animation = null; 
             }
             
             // Re-initialize icons
@@ -907,10 +1055,10 @@
         }
 
         // --- INITIALIZATION ---
-        window.onload = () => {
+        document.addEventListener('DOMContentLoaded', () => {
             renderAll();
             quizSubmitBtn.addEventListener('click', checkQuiz);
-        };
+        });
     </script>
 </body>
 </html>
