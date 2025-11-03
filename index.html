@@ -188,6 +188,80 @@
                 transform: translateX(0);
             }
         }
+
+        /* WBS Interactive Tree Styles */
+        .wbs-tree {
+            list-style: none;
+            padding-left: 0;
+            font-family: 'Inter', sans-serif;
+        }
+        .wbs-tree ul {
+            list-style: none;
+            padding-left: 28px;
+            border-left: 2px solid #e2e8f0;
+            margin-left: 10px;
+        }
+        .wbs-tree li {
+            position: relative;
+            margin-top: 8px;
+        }
+        .wbs-tree .wbs-item {
+            display: flex;
+            align-items: center;
+        }
+        .wbs-tree .wbs-node-toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            color: #3b82f6;
+            transition: transform 0.2s;
+        }
+        .wbs-tree .wbs-node-toggle.rotated {
+            transform: rotate(90deg);
+        }
+        .wbs-tree .wbs-label {
+            font-weight: 500;
+            color: #1e293b;
+            padding: 4px 8px;
+            border-radius: 6px;
+            background: #f1f5f9;
+            margin-left: 4px;
+        }
+        .wbs-tree .work-package {
+            font-weight: 400;
+            color: #334155;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            margin-left: 12px;
+        }
+        
+        /* Simple table for RACI */
+        .raci-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+        .raci-table th, .raci-table td {
+            border: 1px solid #cbd5e1;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        .raci-table th {
+            background-color: #f1f5f9;
+            font-weight: 600;
+        }
+        .raci-table td {
+            background-color: #fff;
+        }
+        .raci-table td:not(:first-child) {
+            text-align: center;
+            font-weight: 700;
+            color: #1e40af;
+        }
     </style>
 </head>
 <body class="bg-slate-100">
@@ -315,6 +389,296 @@
                 ]
             },
             {
+                id: 'project-charter',
+                title: "Developing a Project Charter",
+                icon: 'file-check',
+                notes: `
+                    <div class="prose prose-slate max-w-none">
+                        <h2 class="text-2xl font-bold text-slate-800 mb-4">What is a Project Charter?</h2>
+                        <p class="text-slate-700 mb-4">The <strong>Project Charter</strong> is the "birth certificate" of the project. It's a formal, high-level document that is issued by the project sponsor or initiator. It serves two main purposes:</p>
+                        <ol class="list-decimal list-inside space-y-2 text-slate-700">
+                            <li>It formally <strong>authorizes the existence</strong> of the project.</li>
+                            <li>It provides the <strong>Project Manager with the authority</strong> to apply organizational resources to project activities.</li>
+                        </ol>
+
+                        <h2 class="text-2xl font-bold text-slate-800 mt-8 mb-4">Key Components of a Charter</h2>
+                        <p class="text-slate-700 mb-4">A good charter is high-level and does not include detailed task lists or schedules. It sets the boundaries and vision.</p>
+                        <ul class="list-disc list-inside space-y-2 text-slate-700">
+                            <li><strong>Project Purpose & Justification:</strong> Why are we doing this project? What problem does it solve?</li>
+                            <li><strong>Measurable Objectives & Success Criteria:</strong> How will we know we are done and successful? (e.g., "Increase sales by 10%", "Reduce setup time by 25%").</li>
+                            <li><strong>High-Level Requirements:</strong> The major features or characteristics of the final product.</li>
+                            <li><strong>Assigned Project Manager & Authority Level:</strong> Formally names the PM and states what authority they have (e.g., to manage the budget, to approve changes).</li>
+                            <li><strong>Key Stakeholder List:</strong> Identifies the most important people involved (Sponsor, Customer, etc.).</li>
+                            <li><strong>High-Level Assumptions & Constraints:</strong> What are we assuming to be true? What are our limitations (e.g., a fixed budget of $50,000, a hard deadline).</li>
+                            <li><strong>High-Level Budget & Schedule:</strong> A summary or "order of magnitude" estimate for the project's cost and timeline.</li>
+                            <li><strong>Project Sponsor:</strong> The person who champions and signs the charter.</li>
+                        </ul>
+                        
+                        <h2 class="text-2xl font-bold text-slate-800 mt-8 mb-4">Charter vs. Project Plan</h2>
+                        <p class="text-slate-700 mb-4">This is a common point of confusion. The <strong>Charter</strong> authorizes the project (it's short, high-level). The <strong>Project Plan</strong> is a detailed document created *after* the charter that describes *how* the project will be executed, monitored, and controlled.</p>
+                    </div>
+                `,
+                flashcards: [
+                    { term: "Project Charter", definition: "A document that formally authorizes a project and gives the PM authority to apply resources." },
+                    { term: "Project Sponsor", definition: "The person (usually an executive) who provides resources, support, and issues the charter." },
+                    { term: "Charter Component: Success Criteria", definition: "Measurable standards that determine if the project's objectives have been met." },
+                    { term: "Charter Component: Authority", definition: "The level of power given to the PM (e.g., manage budget, hire team members) defined in the charter." },
+                    { term: "Charter vs. Project Plan", definition: "The Charter *authorizes* the project; the Project Plan *details how* the project will be done." }
+                ],
+                quiz: [
+                    {
+                        question: "What is the primary purpose of a Project Charter?",
+                        options: ["To list all project tasks", "To formally authorize the project and give the PM authority", "To identify all project risks", "To create the final project schedule"],
+                        answer: "To formally authorize the project and give the PM authority"
+                    },
+                    {
+                        question: "Who typically issues and signs the Project Charter?",
+                        options: ["The Project Team", "The Project Sponsor", "The Lead Developer", "The Customer"],
+                        answer: "The Project Sponsor"
+                    },
+                    {
+                        question: "Which of these is NOT a typical component of a Project Charter?",
+                        options: ["High-level budget", "Project purpose", "Detailed task assignments", "Assigned Project Manager"],
+                        answer: "Detailed task assignments"
+                    }
+                ]
+            },
+            {
+                id: 'wbs',
+                title: "Work Breakdown Structure (WBS)",
+                icon: 'network',
+                notes: `
+                    <div class="prose prose-slate max-w-none">
+                        <h2 class="text-2xl font-bold text-slate-800 mb-4">What is a WBS?</h2>
+                        <p class="text-slate-700 mb-4">A <strong>Work Breakdown Structure (WBS)</strong> is a fundamental project management tool. It's a hierarchical, deliverable-oriented decomposition of all the work to be executed by the project team.</p>
+                        <ul class="list-disc list-inside space-y-2 text-slate-700">
+                            <li><strong>Hierarchical:</strong> It's a visual, top-down chart or list that shows levels of detail.</li>
+                            <li><strong>Deliverable-Oriented:</strong> It focuses on the <strong>"what"</strong> (the outcomes or nouns, like "House Foundation"), not the <strong>"how"</strong> (the actions or verbs, like "Pour Concrete").</li>
+                        </ul>
+
+                        <h2 class="text-2xl font-bold text-slate-800 mt-8 mb-4">Interactive WBS Example</h2>
+                        <p class="text-slate-700 mb-4">Click the arrows <i data-lucide="chevron-right" class="inline-block w-4 h-4 text-blue-600"></i> to decompose the project. This shows how a high-level goal is broken down into smaller, manageable pieces.</p>
+                        
+                        <div class="bg-white rounded-lg p-4 border border-slate-200">
+                            <ul class="wbs-tree">
+                                <li>
+                                    <div class="wbs-item">
+                                        <span class="wbs-node-toggle"><i data-lucide="chevron-right" class="w-5 h-5"></i></span>
+                                        <span class="wbs-label">1.0 E-commerce Website</span>
+                                    </div>
+                                    <ul class="hidden">
+                                        <li>
+                                            <div class="wbs-item">
+                                                <span class="wbs-node-toggle"><i data-lucide="chevron-right" class="w-5 h-5"></i></span>
+                                                <span class="wbs-label">1.1 Project Management</span>
+                                            </div>
+                                            <ul class="hidden">
+                                                <li><div class="wbs-item"><span class="wbs-label work-package">1.1.1 Planning</span></div></li>
+                                                <li><div class="wbs-item"><span class="wbs-label work-package">1.1.2 Status Reporting</span></div></li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <div class="wbs-item">
+                                                <span class="wbs-node-toggle"><i data-lucide="chevron-right" class="w-5 h-5"></i></span>
+                                                <span class="wbs-label">1.2 Website Design</span>
+                                            </div>
+                                            <ul class="hidden">
+                                                <li><div class="wbs-item"><span class="wbs-label work-package">1.2.1 Wireframes</span></div></li>
+                                                <li><div class="wbs-item"><span class="wbs-label work-package">1.2.2 UI/UX Mockups</span></div></li>
+                                                <li><div class="wbs-item"><span class="wbs-label work-package">1.2.3 Style Guide</span></div></li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <div class="wbs-item">
+                                                <span class="wbs-node-toggle"><i data-lucide="chevron-right" class="w-5 h-5"></i></span>
+                                                <span class="wbs-label">1.3 Development</span>
+                                            </div>
+                                            <ul class="hidden">
+                                                <li><div class="wbs-item"><span class="wbs-label work-package">1.3.1 Frontend Dev</span></div></li>
+                                                <li><div class="wbs-item"><span class="wbs-label work-package">1.3.2 Backend Dev</span></div></li>
+                                                <li><div class="wbs-item"><span class="wbs-label work-package">1.3.3 Database Setup</span></div></li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <div class="wbs-item">
+                                                <span class="wbs-node-toggle"><i data-lucide="chevron-right" class="w-5 h-5"></i></span>
+                                                <span class="wbs-label">1.4 Testing</span>
+                                            </div>
+                                            <ul class="hidden">
+                                                <li><div class="wbs-item"><span class="wbs-label work-package">1.4.1 Unit Testing</span></div></li>
+                                                <li><div class="wbs-item"><span class="wbs-label work-package">1.4.2 User Acceptance Testing</span></div></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <h2 class="text-2xl font-bold text-slate-800 mt-8 mb-4">How to Create a WBS (Step-by-Step)</h2>
+                        <ol class="list-decimal list-inside space-y-3 text-slate-700">
+                            <li><strong>Start with the Project Scope:</strong> Gather your project charter and scope statement. The top level (Level 1) of your WBS is the project itself.</li>
+                            <li><strong>Identify Major Deliverables (Level 2):</strong> Break down the project into its major, high-level deliverables. These are the main "chunks" of work. (e.g., "Website Design", "Development").</li>
+                            <li><strong>Decompose Deliverables (Level 3+):</strong> Take each Level 2 deliverable and break it down further into smaller, more manageable sub-deliverables. Ask "What is required to complete this?"</li>
+                            <li><strong>Stop at the "Work Package":</strong> Keep decomposing until you reach the lowest level, called the <strong>Work Package</strong>. This is the point where you can confidently estimate cost and duration, and assign the work to a specific person or team.</li>
+                        </ol>
+
+                        <h2 class="text-2xl font-bold text-slate-800 mt-8 mb-4">Key Principles & Components</h2>
+                        <h3 class="text-xl font-semibold text-blue-600 mt-6 mb-3">The 100% Rule</h3>
+                        <p class="text-slate-700 mb-4">This is the most important principle. The WBS must include <strong>100%</strong> of the work defined by the project scope, and *only* the work in the scope. The work at each "child" level must sum up to 100% of the work in its "parent" level.</p>
+                        
+                        <h3 class="text-xl font-semibold text-blue-600 mt-6 mb-3">Work Package vs. WBS Dictionary</h3>
+                        <p class="text-slate-700 mb-4">The <strong>Work Package</strong> is the <em>item</em> at the lowest level of the WBS (e.g., "1.2.1 Wireframes"). The <strong>WBS Dictionary</strong> is a separate document that provides <em>details</em> about that work package (e.g., description, acceptance criteria, estimated cost, responsible team).</p>
+                        
+                        <h2 class="text-2xl font-bold text-slate-800 mt-8 mb-4">Common Pitfalls to Avoid</h2>
+                        <ul class="list-disc list-inside space-y-2 text-slate-700">
+                            <li><strong>Using Verbs (Actions):</strong> This is the most common mistake. A WBS is not a schedule or a task list.
+                                <ul class="list-disc list-inside ml-4 mt-1">
+                                    <li><strong class="text-red-600">Bad:</strong> <em>"Design Wireframes"</em> (This is an <em>action</em>)</li>
+                                    <li><strong class="text-green-600">Good:</strong> <em>"Wireframes"</em> (This is a <em>deliverable/noun</em>)</li>
+                                </ul>
+                            </li>
+                            <li><strong>Getting Too Detailed:</strong> Don't break work down into tiny, hourly tasks. A good rule of thumb is the 8/80 rule: a work package should take no less than 8 hours and no more than 80 hours to complete.</li>
+                            <li><strong>Confusing it with a Schedule:</strong> A WBS has no dates and does not show dependencies. It is simply a breakdown of <em>scope</em>. You must create the WBS <em>before</em> you can build the schedule.</li>
+                        </ul>
+                    </div>
+                `,
+                flashcards: [
+                    { term: "Work Breakdown Structure (WBS)", definition: "A hierarchical, deliverable-oriented decomposition of all project work." },
+                    { term: "The 100% Rule", definition: "The WBS must include 100% of the project scope, and only the project scope." },
+                    { term: "Work Package", definition: "The lowest level of the WBS, where cost and duration can be estimated." },
+                    { term: "WBS 'Nouns, not Verbs'", definition: "WBS items should be deliverables (nouns) like 'Final Report', not activities (verbs) like 'Write Report'." },
+                    { term: "WBS Dictionary", definition: "A document providing detailed descriptions (like acceptance criteria) for each element in the WBS." }
+                ],
+                quiz: [
+                    {
+                        question: "A WBS is primarily focused on:",
+                        options: ["The project timeline", "The project team", "Deliverables and outcomes", "The project budget"],
+                        answer: "Deliverables and outcomes"
+                    },
+                    {
+                        question: "Which rule states that the WBS must capture all work defined in the scope?",
+                        options: ["The 8/80 Rule", "The 100% Rule", "The Noun Rule", "The Scope Rule"],
+                        answer: "The 100% Rule"
+                    },
+                    {
+                        question: "Which of the following is a *good* example of a WBS item?",
+                        options: ["Install Software", "User Interface Mockups", "Test the System", "Gather Requirements"],
+                        answer: "User Interface Mockups"
+                    },
+                    {
+                        question: "What is the lowest level of a WBS called?",
+                        options: ["A task", "An activity", "A work package", "A sub-project"],
+                        answer: "A work package"
+                    },
+                    {
+                        question: "Where would you find detailed information like acceptance criteria and cost estimates for a WBS element?",
+                        options: ["The Project Charter", "The WBS Dictionary", "The Risk Register", "The Gantt Chart"],
+                        answer: "The WBS Dictionary"
+                    }
+                ]
+            },
+            {
+                id: 'ram-matrix',
+                title: "Responsibility Matrix (RAM)",
+                icon: 'clipboard',
+                notes: `
+                    <div class="prose prose-slate max-w-none">
+                        <h2 class="text-2xl font-bold text-slate-800 mb-4">What is a RAM?</h2>
+                        <p class="text-slate-700 mb-4">A <strong>Responsibility Assignment Matrix (RAM)</strong> is a simple tool used to clarify roles and responsibilities. It's a grid that shows all the project activities (often from the WBS work packages) down one axis and the people or roles on the project team across the other axis.</p>
+                        <p class="text-slate-700 mb-4">A RAM helps prevent confusion, like "I didn't know I was supposed to do that!" or "Why wasn't I included in that decision?"</p>
+                        
+                        <h2 class="text-2xl font-bold text-slate-800 mt-8 mb-4">Example: The RACI Chart</h2>
+                        <p class="text-slate-700 mb-4">The most common type of RAM is a <strong>RACI Chart</strong>. This is a specific format where the letters R, A, C, and I are used to fill the grid:</p>
+                        <ul class="list-none space-y-3 p-0">
+                            <li><strong class="text-blue-700 text-lg">R = Responsible:</strong> The person(s) who <em>does</em> the work. There can be multiple 'R's.</li>
+                            <li><strong class="text-blue-700 text-lg">A = Accountable:</strong> The <em>one</em> person who is ultimately answerable for the task. This is the person who approves the work. There must be exactly <strong>one 'A'</strong> for each task.</li>
+                            <li><strong class="text-blue-700 text-lg">C = Consulted:</strong> The person(s) who provides input or feedback (two-way communication).</li>
+                            <li><strong class="text-blue-700 text-lg">I = Informed:</strong> The person(s) who just needs to be kept in the loop (one-way communication).</li>
+                        </ul>
+
+                        <h2 class="text-2xl font-bold text-slate-800 mt-8 mb-4">Sample RACI Chart</h2>
+                        <div class="overflow-x-auto">
+                            <table class="raci-table">
+                                <thead>
+                                    <tr>
+                                        <th>Task / Deliverable</th>
+                                        <th>Project Manager</th>
+                                        <th>Business Analyst</th>
+                                        <th>Lead Developer</th>
+                                        <th>Sponsor</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Project Charter</strong></td>
+                                        <td>R</td>
+                                        <td>C</td>
+                                        <td>I</td>
+                                        <td>A</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Gather Requirements</strong></td>
+                                        <td>I</td>
+                                        <td>A, R</td>
+                                        <td>C</td>
+                                        <td>C</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Develop Code</strong></td>
+                                        <td>I</td>
+                                        <td>C</td>
+                                        <td>A, R</td>
+                                        <td>I</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Final Budget Report</strong></td>
+                                        <td>A, R</td>
+                                        <td>I</td>
+                                        <td>I</td>
+                                        <td>I</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `,
+                flashcards: [
+                    { term: "RAM (Responsibility Assignment Matrix)", definition: "A grid that maps project tasks (from the WBS) to project team members or roles." },
+                    { term: "RACI Chart", definition: "The most common *type* of RAM. Stands for Responsible, Accountable, Consulted, and Informed." },
+                    { term: "RACI: Responsible", definition: "The person or people who actually *do* the work to complete the task." },
+                    { term: "RACI: Accountable", definition: "The *one* person ultimately answerable for the task's success and who approves the work." },
+                    { term: "RACI: Consulted", definition: "A person who provides input or expertise (two-way communication)." },
+                    { term: "RACI: Informed", definition: "A person who is kept up-to-date on progress (one-way communication)." }
+                ],
+                quiz: [
+                     {
+                        question: "A grid that maps project work (from the WBS) to team roles is called a...?",
+                        options: ["WBS Dictionary", "Project Charter", "Responsibility Assignment Matrix (RAM)", "Network Diagram"],
+                        answer: "Responsibility Assignment Matrix (RAM)"
+                    },
+                    {
+                        question: "In a RACI chart, what does 'A' stand for?",
+                        options: ["Assigned", "Accountable", "Approved", "Activity Owner"],
+                        answer: "Accountable"
+                    },
+                    {
+                        question: "For any given task in a RACI chart, how many people can be 'Accountable'?",
+                        options: ["As many as needed", "Two (a primary and a backup)", "Exactly one", "Zero or one"],
+                        answer: "Exactly one"
+                    },
+                    {
+                        question: "A senior manager who just wants to see the weekly status report is most likely...?",
+                        options: ["Responsible", "Accountable", "Consulted", "Informed"],
+                        answer: "Informed"
+                    },
+                    {
+                        question: "The developer who is writing the code for a new feature is...?",
+                        options: ["Responsible", "Accountable", "Consulted", "Informed"],
+                        answer: "Responsible"
+                    }
+                ]
+            },
+            {
                 id: 'q2',
                 title: "Risk Management & Analysis",
                 icon: 'shield-alert',
@@ -369,7 +733,7 @@
             {
                 id: 'q4',
                 title: "Critical Path Method (CPM)",
-                icon: 'network',
+                icon: 'workflow',
                 notes: `
                     <div class="prose prose-slate max-w-none">
                         <h2 class="text-2xl font-bold text-slate-800 mb-4">Critical Path Method</h2>
@@ -864,7 +1228,7 @@
                     renderNotes();
                     break;
                 case 'flashcards':
-                    renderFlashcards();
+                                    renderFlashcards();
                     break;
                 case 'quiz':
                     renderQuiz();
@@ -875,16 +1239,31 @@
             lucide.createIcons();
         }
 
-        // Event Listeners
+        // --- EVENT LISTENERS ---
+
+        // Sidebar Toggles
         openSidebarBtn.addEventListener('click', openSidebar);
         closeSidebarBtn.addEventListener('click', closeSidebar);
         menuOverlay.addEventListener('click', closeSidebar);
 
+        // Mode Switcher
         modeSwitcher.addEventListener('click', (e) => {
             const btn = e.target.closest('.mode-btn');
             if (btn) {
                 state.currentMode = btn.dataset.mode;
                 render();
+            }
+        });
+
+        // WBS Interactive Tree Toggle (Event Delegation)
+        contentArea.addEventListener('click', (e) => {
+            const toggle = e.target.closest('.wbs-node-toggle');
+            if (toggle) {
+                const childList = toggle.parentElement.nextElementSibling;
+                if (childList && childList.tagName === 'UL') {
+                    childList.classList.toggle('hidden');
+                    toggle.classList.toggle('rotated');
+                }
             }
         });
 
