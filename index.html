@@ -265,13 +265,10 @@
     </style>
 </head>
 <body class="bg-slate-100">
-    <!-- Mobile Menu Overlay -->
     <div class="menu-overlay" id="menuOverlay"></div>
 
     <div class="flex h-screen overflow-hidden">
-        <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
-            <!-- Header -->
             <div class="p-4 bg-gradient-to-br from-blue-600 to-blue-700 text-white flex items-center justify-between flex-shrink-0">
                 <div class="flex items-center gap-2">
                     <i data-lucide="book-open-check" class="w-6 h-6"></i>
@@ -282,19 +279,15 @@
                 </button>
             </div>
 
-            <!-- Navigation -->
             <nav class="flex-1 overflow-y-auto p-4" id="sidebarNav">
-                <!-- Topics will be inserted here -->
-            </nav>
+                </nav>
 
             <div class="p-4 text-xs text-slate-500 border-t border-slate-200 flex-shrink-0">
                 Created to help you ace your exam.
             </div>
         </aside>
 
-        <!-- Main Content -->
         <main class="flex-1 flex flex-col overflow-hidden">
-            <!-- Header -->
             <header class="bg-white border-b border-slate-200 p-4 flex-shrink-0">
                 <div class="flex items-center justify-between mb-3">
                     <button class="md:hidden p-2 -ml-2" id="openSidebar">
@@ -306,7 +299,6 @@
                     <div class="w-10 md:hidden"></div>
                 </div>
 
-                <!-- Mode Switcher -->
                 <div class="flex gap-2 bg-slate-200 p-1 rounded-lg" id="modeSwitcher">
                     <button class="mode-btn flex-1 px-4 py-2 rounded-md text-sm font-medium transition-all" data-mode="notes">
                         <i data-lucide="file-text" class="w-4 h-4 inline-block mr-1 -mt-0.5"></i>
@@ -326,10 +318,8 @@
                 </div>
             </header>
 
-            <!-- Content Area -->
             <div class="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8" id="contentArea">
-                <!-- Content will be inserted here -->
-            </div>
+                </div>
         </main>
     </div>
 
@@ -694,6 +684,54 @@
                             <li><strong>Quantitative Analysis:</strong> Numerically analyzing risk effects</li>
                             <li><strong>Risk Response Planning:</strong> Developing strategies</li>
                             <li><strong>Risk Monitoring:</strong> Tracking and evaluating responses</li>
+                        </ol>
+
+                        <h2 class="text-2xl font-bold text-slate-800 mt-8 mb-4">Risk Assessment Matrix (Qualitative Analysis)</h2>
+                        <p class="text-slate-700 mb-4">A <strong>Risk Assessment Matrix</strong> (or Probability and Impact Matrix) is a key tool for <strong>Qualitative Risk Analysis</strong>. It helps prioritize risks by plotting their likelihood of occurring against the severity of their impact on the project.</p>
+                        
+                        <div class="overflow-x-auto my-6 bg-white p-4 rounded-lg border border-slate-200">
+                            <table class="w-full border-collapse text-center table-fixed" style="min-width: 500px;">
+                                <thead>
+                                    <tr>
+                                        <th class="border border-slate-300 p-3" colspan="2" rowspan="2"></th>
+                                        <th class="border border-slate-300 p-3 bg-slate-100 font-semibold" colspan="3">Impact (Severity)</th>
+                                    </tr>
+                                    <tr>
+                                        <th class="border border-slate-300 p-3 bg-slate-100 font-semibold">Low (1)</th>
+                                        <th class="border border-slate-300 p-3 bg-slate-100 font-semibold">Medium (2)</th>
+                                        <th class="border border-slate-300 p-3 bg-slate-100 font-semibold">High (3)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th class="border border-slate-300 p-3 bg-slate-100 font-semibold" rowspan="3" style="writing-mode: vertical-rl; transform: rotate(180deg);">Probability (Likelihood)</th>
+                                        <th class="border border-slate-300 p-3 bg-slate-100 font-semibold">High (3)</th>
+                                        <td class="border border-slate-300 p-4 bg-yellow-100 text-yellow-800 font-bold">Medium (3)</td>
+                                        <td class="border border-slate-300 p-4 bg-red-100 text-red-800 font-bold">High (6)</td>
+                                        <td class="border border-slate-300 p-4 bg-red-100 text-red-800 font-bold">High (9)</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="border border-slate-300 p-3 bg-slate-100 font-semibold">Medium (2)</th>
+                                        <td class="border border-slate-300 p-4 bg-green-100 text-green-800 font-bold">Low (2)</td>
+                                        <td class="border border-slate-300 p-4 bg-yellow-100 text-yellow-800 font-bold">Medium (4)</td>
+                                        <td class="border border-slate-300 p-4 bg-red-100 text-red-800 font-bold">High (6)</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="border border-slate-300 p-3 bg-slate-100 font-semibold">Low (1)</th>
+                                        <td class="border border-slate-300 p-4 bg-green-100 text-green-800 font-bold">Low (1)</td>
+                                        <td class="border border-slate-300 p-4 bg-green-100 text-green-800 font-bold">Low (2)</td>
+                                        <td class="border border-slate-300 p-4 bg-yellow-100 text-yellow-800 font-bold">Medium (3)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <h3 class="text-xl font-semibold text-blue-600 mt-6 mb-3">How to Use the Matrix:</h3>
+                        <ol class="list-decimal list-inside space-y-2 text-slate-700">
+                            <li><strong>Identify Risks:</strong> List all potential risks (e.g., "Supplier delay," "Key developer gets sick").</li>
+                            <li><strong>Assess Probability:</strong> For each risk, decide if its likelihood is High, Medium, or Low.</li>
+                            <li><strong>Assess Impact:</strong> For each risk, decide what the impact would be if it happened (High, Medium, or Low).</li>
+                            <li><strong>Plot & Prioritize:</strong> Find the risk on the matrix. Risks in the red zone (High-High) must be addressed immediately. Risks in the green zone (Low-Low) might be accepted.</li>
                         </ol>
 
                         <h2 class="text-2xl font-bold text-slate-800 mt-8 mb-4">Risk Response Strategies</h2>
